@@ -1,0 +1,92 @@
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+-- 1. Roles Table
+CREATE TABLE `roles` (
+  `role_id` int(11) NOT NULL AUTO_INCREMENT,
+  `role_name` varchar(50) NOT NULL,
+  PRIMARY KEY (`role_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO `roles` (`role_id`, `role_name`) VALUES
+(1, 'ADMIN'),
+(2, 'MCA_CORD'), (3, 'MCA_STAFF'),
+(4, 'BBA_CORD'), (5, 'BBA_STAFF'),
+(6, 'ADMINI_CORD'), (7, 'ADMINI_STAFF'),
+(8, 'TECH_CORD'), (9, 'TECH_STAFF'),
+(10, 'FACILITY_CORD'), (11, 'FACILITY_STAFF');
+-- Note: You can add more stream roles here following the pattern
+
+-- 2. Users Table
+CREATE TABLE `users` (
+  `user_id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(100) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `role_id` int(11) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  PRIMARY KEY (`user_id`),
+  UNIQUE KEY `username` (`username`),
+  FOREIGN KEY (`role_id`) REFERENCES `roles`(`role_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Password for all sample users is 'password123'
+-- Hash generated via password_hash('password123', PASSWORD_DEFAULT)
+INSERT INTO `users` (`username`, `password`, `role_id`, `email`) VALUES
+('admin', '$2y$10$FYhRXaElfD9aVBXjzkNn.OvXmBL8lhbzsi/UKlrIVfRAJivad27Vi', 1, 'admin@college.edu'),
+('mca_cord', '$2y$10$FYhRXaElfD9aVBXjzkNn.OvXmBL8lhbzsi/UKlrIVfRAJivad27Vi', 2, 'mca_head@college.edu'),
+('mca_staff', '$2y$10$FYhRXaElfD9aVBXjzkNn.OvXmBL8lhbzsi/UKlrIVfRAJivad27Vi', 3, 'mca_staff@college.edu'),
+('bba_cord', '$2y$10$FYhRXaElfD9aVBXjzkNn.OvXmBL8lhbzsi/UKlrIVfRAJivad27Vi', 4, 'bba_head@college.edu'),
+('bba_staff', '$2y$10$FYhRXaElfD9aVBXjzkNn.OvXmBL8lhbzsi/UKlrIVfRAJivad27Vi', 5, 'bba_staff@college.edu'),
+('admin_cord', '$2y$10$FYhRXaElfD9aVBXjzkNn.OvXmBL8lhbzsi/UKlrIVfRAJivad27Vi', 6, 'admin_head@college.edu'),
+('admin_staff', '$2y$10$FYhRXaElfD9aVBXjzkNn.OvXmBL8lhbzsi/UKlrIVfRAJivad27Vi', 7, 'admin_staff@college.edu'),
+('tech_cord', '$2y$10$FYhRXaElfD9aVBXjzkNn.OvXmBL8lhbzsi/UKlrIVfRAJivad27Vi', 8, 'tech_head@college.edu'),
+('tech_staff', '$2y$10$FYhRXaElfD9aVBXjzkNn.OvXmBL8lhbzsi/UKlrIVfRAJivad27Vi', 9, 'tech_staff@college.edu'),
+('facility_cord', '$2y$10$FYhRXaElfD9aVBXjzkNn.OvXmBL8lhbzsi/UKlrIVfRAJivad27Vi', 10, 'facility_head@college.edu'),
+('facility_staff', '$2y$10$FYhRXaElfD9aVBXjzkNn.OvXmBL8lhbzsi/UKlrIVfRAJivad27Vi', 11, 'facility_staff@college.edu');
+
+-- 3. Tickets Table
+CREATE TABLE `tickets` (
+  `ticket_id` int(11) NOT NULL AUTO_INCREMENT,
+  `ticket_number` varchar(20) NOT NULL,
+  `requester_email` varchar(100) NOT NULL,
+  `requester_type` enum('Student','Faculty') NOT NULL,
+  `stream` varchar(50) DEFAULT NULL,
+  `category` enum('Academic','Administrative','Technical','Facility') NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `description` text NOT NULL,
+  `status` enum('OPEN','IN-PROGRESS','RESOLVED','CLOSED') NOT NULL DEFAULT 'OPEN',
+  `assigned_user_id` int(11) DEFAULT NULL,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `resolved_at` datetime DEFAULT NULL,
+  `closed_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`ticket_id`),
+  UNIQUE KEY `ticket_number` (`ticket_number`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 4. Ticket Comments Table
+CREATE TABLE `ticket_comments` (
+  `comment_id` int(11) NOT NULL AUTO_INCREMENT,
+  `ticket_id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL, -- NULL if system generated or public
+  `comment_text` text NOT NULL,
+  `created_at` datetime DEFAULT current_timestamp(),
+  PRIMARY KEY (`comment_id`),
+  FOREIGN KEY (`ticket_id`) REFERENCES `tickets`(`ticket_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 5. Attachments Table
+CREATE TABLE `ticket_attachments` (
+  `attachment_id` int(11) NOT NULL AUTO_INCREMENT,
+  `ticket_id` int(11) NOT NULL,
+  `filename` varchar(255) NOT NULL,
+  `file_data` longblob NOT NULL,
+  `mime_type` varchar(100) NOT NULL,
+  PRIMARY KEY (`attachment_id`),
+  FOREIGN KEY (`ticket_id`) REFERENCES `tickets`(`ticket_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+COMMIT;
+
+
+
