@@ -1,0 +1,35 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>College Helpdesk</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="navbar">
+    <div>College Helpdesk System</div>
+    <div>
+        <?php
+        // Determine Home Link
+        $home_link = 'index.php'; // Default public home
+        if (isset($_SESSION['role'])) {
+            if ($_SESSION['role'] == 'ADMIN') {
+                $home_link = 'admin_dashboard.php';
+            } elseif (strpos($_SESSION['role'], '_CORD') !== false) {
+                $home_link = 'cord_dashboard.php';
+            } elseif (strpos($_SESSION['role'], '_STAFF') !== false) {
+                $home_link = 'staff_dashboard.php';
+            }
+        }
+        ?>
+        
+        <a href="<?= $home_link ?>">Home</a>
+        
+        <?php if(isset($_SESSION['user_id'])): ?>
+            <span style="margin-left:15px; font-size:0.9em;">Hello, <?= $_SESSION['username'] ?></span>
+            <a href="logout.php">Logout</a>
+        <?php else: ?>
+            <a href="login.php">Staff Login</a>
+        <?php endif; ?>
+    </div>
+</div>
