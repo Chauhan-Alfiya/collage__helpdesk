@@ -1,10 +1,10 @@
 <?php
-// Function to generate unique ticket number
+// unique ticket number hd is helpdesk data for-exmple hd.20250209-5898
 function generateTicketNumber() {
     return 'HD-' . date('Ymd') . '-' . rand(1000, 9999);
 }
 
-// Function to route ticket to correct Coordinator ID based on Category & Stream
+// ticket to correct Coordinator ID based on Category & Stream
 function getCoordinatorId($pdo, $category, $stream) {
     $role_name = '';
     

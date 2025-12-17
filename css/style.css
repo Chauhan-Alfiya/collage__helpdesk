@@ -62,7 +62,7 @@ body {
      color: var(--text-main); 
 }
 
-/* --- Layout --- */
+/* Layout */
 .container {
     width: 90%;
     max-width: 1100px;
@@ -85,8 +85,16 @@ h2 { font-size: 1.8rem; margin-bottom: 1.5rem; border-bottom: 2px solid var(--bg
 p { color: var(--text-muted); }
 
 /* --- Forms --- */
-.form-group { margin-bottom: 1.25rem; }
-.form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-main); font-size: 0.9rem; }
+.form-group { 
+    margin-bottom: 20px; 
+}
+.form-group label { 
+    display: block; 
+    margin-bottom: 8px; 
+    font-weight: 500; 
+    color: var(--text-main); 
+    font-size: 14.4px; 
+}
 .form-control {
     width: 100%;
     padding: 0.75rem 1rem;
@@ -97,7 +105,10 @@ p { color: var(--text-muted); }
     background: var(--bg-light);
     box-sizing: border-box; /* Fixes width issues */
 }
-.form-control:focus { outline: none; border-color: var(--primary); background: var(--surface); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
+.form-control:focus { outline: none; 
+    border-color: var(--primary); 
+    background: var(--surface); 
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
 textarea.form-control { resize: vertical; min-height: 120px; font-family: inherit; }
 
 /* --- Buttons --- */

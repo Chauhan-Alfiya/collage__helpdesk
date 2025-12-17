@@ -18,9 +18,12 @@
         <?php
         $home_link = 'index.php';
         if (isset($_SESSION['role'])) {
-            if ($_SESSION['role'] == 'ADMIN') $home_link = 'admin_dashboard.php';
-            elseif (strpos($_SESSION['role'], '_CORD') !== false) $home_link = 'cord_dashboard.php';
-            elseif (strpos($_SESSION['role'], '_STAFF') !== false) $home_link = 'staff_dashboard.php';
+            if ($_SESSION['role'] == 'ADMIN') 
+                $home_link = 'admin_dashboard.php';
+            elseif (strpos($_SESSION['role'], '_CORD') !== false) 
+                $home_link = 'cord_dashboard.php';
+            elseif (strpos($_SESSION['role'], '_STAFF') !== false) 
+                $home_link = 'staff_dashboard.php';
         }
         ?>
         
