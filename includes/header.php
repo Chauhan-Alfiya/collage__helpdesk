@@ -16,10 +16,16 @@
     </div>
     <div>
         <?php
-        $home_link = 'index.php';
+         $home_link = 'home.php';
         if (isset($_SESSION['role'])) {
             if ($_SESSION['role'] == 'ADMIN') 
                 $home_link = 'admin_dashboard.php';
+
+            elseif ($_SESSION['role'] == 'STUDENT') 
+                $home_link = 'home.php';
+            elseif ($_SESSION['role'] == 'FACULTY') 
+                $home_link = 'home.php';
+                
             elseif (strpos($_SESSION['role'], '_CORD') !== false) 
                 $home_link = 'cord_dashboard.php';
             elseif (strpos($_SESSION['role'], '_STAFF') !== false) 

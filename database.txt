@@ -4,7 +4,7 @@ SET time_zone = "+00:00";
 
 -- 1. Roles Table
 CREATE TABLE `roles` (
-  `role_id` int NOT NULL AUTO_INCREMENT,
+  `role_id` int(11) NOT NULL AUTO_INCREMENT,
   `role_name` varchar(50) NOT NULL,
   PRIMARY KEY (`role_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -90,3 +90,29 @@ COMMIT;
 
 
 
+CREATE TABLE `j_role` (
+  `role_id` int(11) NOT NULL AUTO_INCREMENT,
+  `role_name` varchar(50) NOT NULL,
+  PRIMARY KEY (`role_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO `j_role` (`role_id`, `role_name`) VALUES
+(1, ' STUDENT'),
+(2, 'FACILITY');
+
+
+CREATE TABLE `j_users` (
+  `user_id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(100) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `role_id` int(11) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  PRIMARY KEY (`user_id`),
+  UNIQUE KEY `username` (`username`),
+  FOREIGN KEY (`role_id`) REFERENCES `roles`(`role_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO `j_users` (`username`, `password`, `role_id`, `email`) VALUES
+
+('student', '$2y$10$FYhRXaElfD9aVBXjzkNn.OvXmBL8lhbzsi/UKlrIVfRAJivad27Vi', 1, 'Student@college.edu'),
+('facility', '$2y$10$FYhRXaElfD9aVBXjzkNn.OvXmBL8lhbzsi/UKlrIVfRAJivad27Vi', 2, 'facility@college.edu');
