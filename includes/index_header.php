@@ -19,23 +19,25 @@
          $home_link = 'home.php';
         if (isset($_SESSION['role'])) {
             if ($_SESSION['role'] == 'ADMIN') 
-                $home_link = 'admin_dashboard.php';
+                $home_link = 'home.php';
+
+             elseif ($_SESSION['role'] == 'STUDENT') 
+                 $home_link = 'home.php';
+            elseif ($_SESSION['role'] == 'FACULTY') 
+                 $home_link = 'home.php';
+                
             elseif (strpos($_SESSION['role'], '_CORD') !== false) 
-                $home_link = 'cord_dashboard.php';
+                $home_link = 'home.php';
             elseif (strpos($_SESSION['role'], '_STAFF') !== false) 
-                $home_link = 'staff_dashboard.php';
+                $home_link = 'home.php';
         }
-        ?>
-        
-        <a href="home.php"><i class="fa-solid fa-house"></i> Home</a>
-        
+        ?>  
+        <a href="index.php"><i class="fa-solid fa-house"></i> Home</a>     
         <?php if(isset($_SESSION['user_id'])): ?>
-            <span class="user-badge" ><i class="fa-solid fa-user"></i> <?= htmlspecialchars($_SESSION['username']) ?></span>
-            <a href="logout.php"   ><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+            <span class="user-badge"><i class="fa-solid fa-user"></i> <?= htmlspecialchars($_SESSION['username']) ?></span>
+            <a href="logout.php"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
         <?php else: ?>
-  
-            <a href="login.php" class="btn btn-primary" style="margin-left: 15px; color: white; padding: 8px 20px;"><i class="fa-solid fa-lock"></i> Staff Login</a>
-            <a href="logout.php" class="btn btn-primary" style="margin-left: 15px; color: white; padding: 8px 20px;"><i class="fa-solid fa-lock"></i> Logout</a>
+            <a href="common_login.php" class="btn btn-primary" style="margin-left: 15px; color: white; padding: 8px 20px;"><i class="fa-solid fa-lock"></i> Login</a>
         <?php endif; ?>
     </div>
 </nav>

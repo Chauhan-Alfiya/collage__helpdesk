@@ -17,6 +17,15 @@ if (ini_get("session.use_cookies")) {
 session_destroy();
 
 // Redirect to login/home page
-header("Location: index.php");
+if (isset($_SESSION['role'])) {
+            if ($_SESSION['role'] == 'ADMIN'); 
+            elseif (strpos($_SESSION['role'], '_CORD') !== false);                
+            elseif (strpos($_SESSION['role'], '_STAFF') !== false); 
+                header("Location: home.php");
+        }
+
+else {
+    header("Location: index.php");
+}
 exit;
 ?>

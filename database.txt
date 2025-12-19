@@ -86,10 +86,6 @@ CREATE TABLE `ticket_attachments` (
   FOREIGN KEY (`ticket_id`) REFERENCES `tickets`(`ticket_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-COMMIT;
-
-
-
 CREATE TABLE `j_role` (
   `role_id` int(11) NOT NULL AUTO_INCREMENT,
   `role_name` varchar(50) NOT NULL,
@@ -99,7 +95,6 @@ CREATE TABLE `j_role` (
 INSERT INTO `j_role` (`role_id`, `role_name`) VALUES
 (1, ' STUDENT'),
 (2, 'FACILITY');
-
 
 CREATE TABLE `j_users` (
   `user_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -116,3 +111,5 @@ INSERT INTO `j_users` (`username`, `password`, `role_id`, `email`) VALUES
 
 ('student', '$2y$10$FYhRXaElfD9aVBXjzkNn.OvXmBL8lhbzsi/UKlrIVfRAJivad27Vi', 1, 'Student@college.edu'),
 ('facility', '$2y$10$FYhRXaElfD9aVBXjzkNn.OvXmBL8lhbzsi/UKlrIVfRAJivad27Vi', 2, 'facility@college.edu');
+
+COMMIT;
