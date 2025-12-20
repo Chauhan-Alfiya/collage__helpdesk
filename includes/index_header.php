@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-
 <nav class="navbar">
     <div class="brand">
         <i class="fa-solid fa-graduation-cap"></i> College Helpdesk
@@ -31,13 +30,15 @@
             elseif (strpos($_SESSION['role'], '_STAFF') !== false) 
                 $home_link = 'home.php';
         }
-        ?>  
+        
+?>
         <a href="index.php"><i class="fa-solid fa-house"></i> Home</a>     
         <?php if(isset($_SESSION['user_id'])): ?>
             <span class="user-badge"><i class="fa-solid fa-user"></i> <?= htmlspecialchars($_SESSION['username']) ?></span>
             <a href="logout.php"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
         <?php else: ?>
             <a href="common_login.php" class="btn btn-primary" style="margin-left: 15px; color: white; padding: 8px 20px;"><i class="fa-solid fa-lock"></i> Login</a>
+            <a href="signup.php" class="btn btn-primary" style="margin-left: 15px; color: white; padding: 8px 20px;"><i class="fa-solid fa-user-plus"></i> Sign Up</a>
         <?php endif; ?>
     </div>
 </nav>

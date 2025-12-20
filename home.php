@@ -1,5 +1,7 @@
 <?php 
+   
     include 'includes/header.php';
+
 ?>
 <div class="container" style="text-align: center; padding: 50px;">
     <h1>Welcome to College Helpdesk</h1>

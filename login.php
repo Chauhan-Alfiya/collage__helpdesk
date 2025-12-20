@@ -19,6 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($user['role_name'] == 'ADMIN') header("Location: admin_dashboard.php");
         elseif (strpos($user['role_name'], '_CORD') !== false) header("Location: cord_dashboard.php");
         elseif (strpos($user['role_name'], '_STAFF') !== false) header("Location: staff_dashboard.php");
+        
         exit;
     } 
     else {
@@ -49,8 +50,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 10px;">
                 Sign In <i class="fa-solid fa-arrow-right" style="margin-left: 10px;"></i>
             </button>
+            <div style="text-align: center; margin-top: 20px;">
+            <a href="#">Forgot Password?</a>
+            </div>
         </form>
     </div>
 </div>
 </body>
 </html>
+
+ <!-- <p class="extra">
+                <a href="#">Forgot Password?</a><br>
+                Don’t have an account? <a href="#">Sign up</a>
+            </p>  -->

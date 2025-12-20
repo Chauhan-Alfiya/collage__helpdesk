@@ -1,8 +1,11 @@
 <?php
 session_start();
 
+
+$role = $_SESSION['role'] ?? null;
+
 // Unset all session variables
-$_SESSION = array();
+$_SESSION = [];
 
 // Destroy the session cookie if it exists
 if (ini_get("session.use_cookies")) {
@@ -17,13 +20,12 @@ if (ini_get("session.use_cookies")) {
 session_destroy();
 
 // Redirect to login/home page
-if (isset($_SESSION['role'])) {
-            if ($_SESSION['role'] == 'ADMIN'); 
-            elseif (strpos($_SESSION['role'], '_CORD') !== false);                
-            elseif (strpos($_SESSION['role'], '_STAFF') !== false); 
-                header("Location: home.php");
-        }
-
+if ($role === 'ADMIN' || strpos($role, '_CORD') !== false || strpos($role, '_STAFF') !== false) {
+    header("Location: home.php");
+}
+elseif ($role === 'STUDENT' || $role === 'FACULTY') {
+    header("Location: index.php");
+}
 else {
     header("Location: index.php");
 }

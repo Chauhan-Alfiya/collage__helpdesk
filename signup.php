@@ -1,11 +1,11 @@
 <?php
 session_start();
 include 'includes/db.php';
-include 'includes/header.php'; 
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+include 'includes/index_header.php';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username']);
     $email = trim($_POST['email']);
+    $stream = trim($_POST['stream']);
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
 
@@ -13,23 +13,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $error = "Passwords do not match.";
     } 
     else {
-        $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
-        $stmt->execute([$username]);
-        if ($stmt->fetch()) {
-            $error = "Username already taken.";
-        } else {
-            
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM j_users WHERE username = ? OR email = ?");
+        $stmt->execute([$username, $email]);
+        if ($stmt->fetchColumn() > 0) {
+            $error = "Username or Email already taken.";
+        } 
+        else {
             $hashed_password = password_hash($password, PASSWORD_BCRYPT);
-            $stmt = $pdo->prepare("INSERT INTO users (username, email, password, role_id) VALUES (?, ?, ?, ?)");
-            $stmt->execute([$username,$email, $hashed_password, ]); // Temporary role_id         
-            header("Location: login.php");
-            exit;
+            $role_id = 1; 
+            $stmt = $pdo->prepare("INSERT INTO j_users (username, email, stream, password, role_id) VALUES (?, ?, ?, ?, ?)");
+            if ($stmt->execute([$username, $email, $stream, $hashed_password, $role_id])) {
+                header("Location: common_login.php?registered=1");
+                exit;
+            } else {
+                $error = "Registration failed. Please try again.";
+            }
         }
     }
 }
-//<?php if(isset($error)) echo "<div class='alert error'><i class='fa-solid fa-circle-exclamation'></i> $error</div>"; ?>
-
-<div style="min-height: 110vh; display: flex; align-items: center; justify-content: center;">
+?>
+<div style="min-height: 100vh; display: flex; align-items: center; justify-content: center;">
     <div class="card" style="width: 100%; max-width: 400px; padding: 2.5rem;">
         <div style="text-align: center; margin-bottom: rem;">
             <i class="fa-solid fa-user-plus" style="font-size: 3rem; color: var(--primary);"></i>
@@ -40,12 +43,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <form method="POST">
             <div class="form-group">
                 <label>Username</label>
-                <input type="text" name="username" class="form-control" placeholder="e.g. mca_cord" required>   
+                <input type="text" name="username" class="form-control" placeholder=" Enter Username" required>   
             </div>
             <div>
                 <label>Email</label>
-                <input type="email" name="email" class="form-control" placeholder="e.g. user@example.com" required>
+                <input type="email" name="email" class="form-control" placeholder="Enter Email" required>
             </div>
+            <div>
+                <lable>Stream</lable>
+                <input type="text" name="stream" class="form-control" placeholder="e.g. MCA, BCA, etc." required>
+            </div>
+
             <div class="form-group">
                 <label>Password</label>
                 <input type="password" name="password" class="form-control" placeholder="••••••••" required>
@@ -57,12 +65,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 10px;">
                 Register <i class="fa-solid fa-arrow-right" style="margin-left: 10px;"></i>
             </button>
-            <div style="text-align: center; margin-top: 20px;">
-        <p>Already have an account? <a href="login.php">Log in</a></p>
-</div>
         </form>
     </div>
 </div>
-
-
-

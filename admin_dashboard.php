@@ -40,7 +40,8 @@ $tickets = $stmt->fetchAll();
 <div class="container">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
         <h2>Admin Overview</h2>
-         <a href="register.php" class="btn btn-secondary" style="font-size: 19px;">Sign Up</a>
+         <a href="register.php" class="btn btn-secondary" style="font-size: 19px;"><i class="fa-solid fa-lock"></i>Sign up</a>
+
     </div>
 
     <div class="stats-grid">
