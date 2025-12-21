@@ -1,37 +1,50 @@
 <?php
 session_start();
-include 'includes/db.php';
-include 'includes/index_header.php';
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = trim($_POST['username']);
-    $email = trim($_POST['email']);
-    $stream = trim($_POST['stream']);
-    $password = $_POST['password'];
-    $confirm_password = $_POST['confirm_password'];
+    include 'includes/db.php';
+    include 'includes/index_header.php';
+    $error = '';
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $username = $_POST['username'];
+        $email = $_POST['email'];
+        $stream = $_POST['stream'];
+        $role = $_POST['role'];
+        $semester = $_POST['semester'];
+        $password = $_POST['password'];
+        $confirm_password = $_POST['confirm_password'];
 
-    if ($password !== $confirm_password) {
-        $error = "Passwords do not match.";
-    } 
-    else {
-        $stmt = $pdo->prepare("SELECT COUNT(*) FROM j_users WHERE username = ? OR email = ?");
-        $stmt->execute([$username, $email]);
-        if ($stmt->fetchColumn() > 0) {
-            $error = "Username or Email already taken.";
+        if ($password !== $confirm_password) {
+            $error = "Passwords do not match.";
         } 
+            // // Check if username or email already exists
+             $stmt = $pdo->prepare("SELECT * FROM student WHERE username = ? OR email = ?");
+             $stmt->execute([$username, $email]);
+             if ($stmt->rowCount() > 0) {
+                $error = "Username or Email already exists.";
+            
+        }
         else {
+    
             $hashed_password = password_hash($password, PASSWORD_BCRYPT);
-            $role_id = 1; 
-            $stmt = $pdo->prepare("INSERT INTO j_users (username, email, stream, password, role_id) VALUES (?, ?, ?, ?, ?)");
-            if ($stmt->execute([$username, $email, $stream, $hashed_password, $role_id])) {
-                header("Location: common_login.php?registered=1");
-                exit;
-            } else {
-                $error = "Registration failed. Please try again.";
-            }
+            $stmt = $pdo->prepare(
+                "INSERT INTO student (username, email, stream, role, semester, password)
+                 VALUES (:username, :email, :stream, :role, :semester, :password)"
+            );
+            $stmt->execute([
+                ':username' => $username,
+                ':email'    => $email,
+                ':stream'   => $stream,
+                ':role'     => $role,
+                ':semester' => $semester,
+                ':password' => $hashed_password
+            ]);
+    
+            header("Location: common_login.php");
+            exit();
         }
     }
-}
 ?>
+
+
 <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center;">
     <div class="card" style="width: 100%; max-width: 400px; padding: 2.5rem;">
         <div style="text-align: center; margin-bottom: rem;">
@@ -45,15 +58,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <label>Username</label>
                 <input type="text" name="username" class="form-control" placeholder=" Enter Username" required>   
             </div>
-            <div>
+            <div class="form-group">
                 <label>Email</label>
                 <input type="email" name="email" class="form-control" placeholder="Enter Email" required>
             </div>
-            <div>
-                <lable>Stream</lable>
+            <div class="form-group">
+                <label>Stream</label>
                 <input type="text" name="stream" class="form-control" placeholder="e.g. MCA, BCA, etc." required>
             </div>
+            <div class="form-group">
+                <label>Semester</label>
+                <input type="number" name="semester" class="form-control" placeholder="e.g. 1, 2, 3, etc." required>
+            </div>
+            <div class="frorm-grop">
+                <lable>Role</lable>
+                <select name="role" class="form-control" required>
+                    <option value="STUDENT">Student</option>
+                    <option value="FACULTY">Faculty</option>
+                </select>
 
+            <div>
             <div class="form-group">
                 <label>Password</label>
                 <input type="password" name="password" class="form-control" placeholder="••••••••" required>
