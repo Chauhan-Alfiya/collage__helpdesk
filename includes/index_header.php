@@ -38,7 +38,6 @@
             <a href="logout.php"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
         <?php else: ?>
             <a href="common_login.php" class="btn btn-primary" style="margin-left: 15px; color: white; padding: 8px 20px;"><i class="fa-solid fa-lock"></i> Login</a>
-            <a href="signup.php" class="btn btn-primary" style="margin-left: 15px; color: white; padding: 8px 20px;"><i class="fa-solid fa-user-plus"></i> Sign Up</a>
         <?php endif; ?>
     </div>
 </nav>

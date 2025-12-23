@@ -53,6 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <div style="text-align: center; margin-top: 20px;">
             <a href="#">Forgot Password?</a>
             </div>
+            
         </form>
     </div>
 </div>

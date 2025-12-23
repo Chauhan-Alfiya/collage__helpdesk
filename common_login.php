@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<div style="min-height: 80vh; display: flex; align-items: center; justify-content: center;">
+<div style="min-height: 100vh; display: flex; align-items: center; justify-content: center;">
     <div class="card" style="width: 100%; max-width: 400px; padding: 2.5rem;">
         <div style="text-align: center; margin-bottom: 2rem;">
             <i class="fa-solid fa-user-shield" style="font-size: 3rem; color: var(--primary);"></i>
@@ -75,15 +75,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <label>Password</label>
                 <input type="password" name="password" class="form-control" placeholder="••••••••" required>
              </div>
+             
             <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 10px;">
                 Sign In <i class="fa-solid fa-arrow-right" style="margin-left: 10px;"></i>
             </button>
-             <div style="text-align: center; margin-top: 20px;">
+             <p style="text-align: center; margin-top: 10px; font-size: 14px;">
             <a href="#">Forgot Password?</a>
-            </div>
+            </p>
+            <p style="text-align: center; margin-top: 10px;">Create New User --> <a href="signup.php" >Sign Up</a></p>
         </form>
     </div>
 </div>
 </body>
 </html>
-
