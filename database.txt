@@ -4,26 +4,31 @@ SET time_zone = "+00:00";
 
 -- 1. Roles Table
 CREATE TABLE `roles` (
-  `role_id` int(11) NOT NULL AUTO_INCREMENT,
+  `role_id` int NOT NULL AUTO_INCREMENT,
   `role_name` varchar(50) NOT NULL,
   PRIMARY KEY (`role_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO `roles` (`role_id`, `role_name`) VALUES
-(1, 'ADMIN'),
-(2, 'MCA_CORD'), (3, 'MCA_STAFF'),
-(4, 'BBA_CORD'), (5, 'BBA_STAFF'),
-(6, 'ADMINI_CORD'), (7, 'ADMINI_STAFF'),
-(8, 'TECH_CORD'), (9, 'TECH_STAFF'),
-(10, 'FACILITY_CORD'), (11, 'FACILITY_STAFF');
+INSERT INTO `roles` (`role_name`) VALUES
+( 'ADMIN'),
+( 'MCA_CORD'), 
+( 'MCA_STAFF'),
+( 'BBA_CORD'), 
+( 'BBA_STAFF'),
+( 'ADMINI_CORD'), 
+( 'ADMINI_STAFF'),
+( 'TECH_CORD'), 
+( 'TECH_STAFF'),
+( 'FACILITY_CORD'), 
+( 'FACILITY_STAFF');
 -- Note: You can add more stream roles here following the pattern
 
 -- 2. Users Table
 CREATE TABLE `users` (
-  `user_id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL AUTO_INCREMENT,
   `username` varchar(100) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `role_id` int(11) NOT NULL,
+  `role_id` int NOT NULL,
   `email` varchar(100) NOT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `username` (`username`),
@@ -47,7 +52,7 @@ INSERT INTO `users` (`username`, `password`, `role_id`, `email`) VALUES
 
 -- 3. Tickets Table
 CREATE TABLE `tickets` (
-  `ticket_id` int(11) NOT NULL AUTO_INCREMENT,
+  `ticket_id` int NOT NULL AUTO_INCREMENT,
   `ticket_number` varchar(20) NOT NULL,
   `requester_email` varchar(100) NOT NULL,
   `requester_type` enum('Student','Faculty') NOT NULL,
@@ -56,7 +61,7 @@ CREATE TABLE `tickets` (
   `title` varchar(255) NOT NULL,
   `description` text NOT NULL,
   `status` enum('OPEN','IN-PROGRESS','RESOLVED','CLOSED') NOT NULL DEFAULT 'OPEN',
-  `assigned_user_id` int(11) DEFAULT NULL,
+  `assigned_user_id` int DEFAULT NULL,
   `created_at` datetime DEFAULT current_timestamp(),
   `resolved_at` datetime DEFAULT NULL,
   `closed_at` datetime DEFAULT NULL,
@@ -66,19 +71,19 @@ CREATE TABLE `tickets` (
 
 -- 4. Ticket Comments Table
 CREATE TABLE `ticket_comments` (
-  `comment_id` int(11) NOT NULL AUTO_INCREMENT,
-  `ticket_id` int(11) NOT NULL,
-  `user_id` int(11) DEFAULT NULL, -- NULL if system generated or public
+  `comment_id` int NOT NULL AUTO_INCREMENT,
+  `ticket_id` int NOT NULL,
+  `user_id` int DEFAULT NULL, -- NULL if system generated or public
   `comment_text` text NOT NULL,
   `created_at` datetime DEFAULT current_timestamp(),
   PRIMARY KEY (`comment_id`),
   FOREIGN KEY (`ticket_id`) REFERENCES `tickets`(`ticket_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
+ 
 -- 5. Attachments Table
 CREATE TABLE `ticket_attachments` (
-  `attachment_id` int(11) NOT NULL AUTO_INCREMENT,
-  `ticket_id` int(11) NOT NULL,
+  `attachment_id` int NOT NULL AUTO_INCREMENT,
+  `ticket_id` int NOT NULL,
   `filename` varchar(255) NOT NULL,
   `file_data` longblob NOT NULL,
   `mime_type` varchar(100) NOT NULL,
@@ -86,32 +91,32 @@ CREATE TABLE `ticket_attachments` (
   FOREIGN KEY (`ticket_id`) REFERENCES `tickets`(`ticket_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-----6.
+
 CREATE TABLE `j_role` (
-  `role_id` int(11) NOT NULL AUTO_INCREMENT,
-  `role_name` varchar(50) NOT NULL,
+  `role_id` int NOT NULL AUTO_INCREMENT,
+  `role_name` varchar(255) NOT NULL,
   PRIMARY KEY (`role_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO `j_role` (`role_id`, `role_name`) VALUES
-(1, ' STUDENT'),
-(2, 'FACILITY');
+INSERT INTO `j_role` (`role_name`) VALUES
+( 'STUDENT'),
+( 'FACILITY');
 
----7
+
 CREATE TABLE `j_users` (
-  `user_id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL AUTO_INCREMENT,
   `username` varchar(100) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `role_id` int(11) NOT NULL,
+  `role_id` int NOT NULL,
   `email` varchar(100) NOT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `username` (`username`),
-  FOREIGN KEY (`role_id`) REFERENCES `roles`(`role_id`)
+  FOREIGN KEY (`role_id`) REFERENCES `j_role`(`role_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `j_users` (`username`, `password`, `role_id`, `email`) VALUES
 
-('student', ,'$2y$10$FYhRXaElfD9aVBXjzkNn.OvXmBL8lhbzsi/UKlrIVfRAJivad27Vi' 1, 'Student@college.edu'),
+('student', '$2y$10$FYhRXaElfD9aVBXjzkNn.OvXmBL8lhbzsi/UKlrIVfRAJivad27Vi' ,1, 'Student@college.edu'),
 ('facility', '$2y$10$FYhRXaElfD9aVBXjzkNn.OvXmBL8lhbzsi/UKlrIVfRAJivad27Vi', 2, 'facility@college.edu');
 
 

@@ -1,3 +1,5 @@
+
+
 <?php
 session_start();
 include 'includes/db.php';
@@ -13,15 +15,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $error = "Passwords do not match.";
     } 
     else {
+
         $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
         $stmt->execute([$username]);
         if ($stmt->fetch()) {
             $error = "Username already taken.";
+
         } else {
-            
+
+            //last role id
+            $roleStmt = $pdo->query("SELECT MAX(role_id) AS last_id FROM roles");
+            $lastRole = $roleStmt->fetch();
+            $nextRoleId = $lastRole['last_id'] + 1;
+
+            // Insert new role
+            $roleName = strtoupper($username) . " ";
+            $stmtRole = $pdo->prepare("INSERT INTO roles (role_id, role_name) VALUES (?, ?)");
+            $stmtRole->execute([$nextRoleId, $roleName]);
+
+
             $hashed_password = password_hash($password, PASSWORD_BCRYPT);
             $stmt = $pdo->prepare("INSERT INTO users (username, email, password, role_id) VALUES (?, ?, ?, ?)");
-            $stmt->execute([$username,$email, $hashed_password,12]); // Temporary role_id         
+            $stmt->execute([$username,$email, $hashed_password, $nextRoleId]); // Use the new role_id
             header("Location: login.php");
             exit;
         }

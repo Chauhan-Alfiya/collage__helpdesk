@@ -4,10 +4,10 @@ include 'includes/db.php';
 include 'includes/index_header.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
     $username = trim($_POST['username']);
     $password = $_POST['password'];
     $user = null;
+    
     
     $stmt = $pdo->prepare("
         SELECT u.user_id, u.username, u.password, r.role_name
@@ -27,6 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ");
         $stmt->execute([$username]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        
     }
     // Verify password
     if ($user && password_verify($password, $user['password'])) {
