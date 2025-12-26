@@ -32,15 +32,11 @@
 
         
 
-        <?php if(isset($_SESSION['user_id'])): ?>
+
+<?php if(isset($_SESSION['user_id'])): ?>
             <span class="user-badge" ><i class="fa-solid fa-user"></i> <?= htmlspecialchars($_SESSION['username']) ?></span>
             <a href="logout.php"   ><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
         <?php else: ?>
-            <?php
-            if($username == 'admin' || strpos($username, '_CORD') !== false || strpos($username, '_STAFF') !== false){
-                
-            } else :               
-                ?>
             <a href="login.php" class="btn btn-primary" style="margin-left: 15px; color: white; padding: 8px 20px;"><i class="fa-solid fa-lock"></i> Staff Login</a>
             <a href="logout.php" class="btn btn-primary" style="margin-left: 15px; color: white; padding: 8px 20px;"><i class="fa-solid fa-lock"></i> Logout</a>
         <?php endif; ?>

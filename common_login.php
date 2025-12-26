@@ -7,7 +7,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username']);
     $password = $_POST['password'];
     $user = null;
-    
+   
+
+$stmt = $pdo->prepare("SELECT u.*, r.role_name FROM j_users u JOIN j_role r ON u.role_id = r.role_id WHERE username = ?");
+    $stmt->execute([$username]);
+    $user = $stmt->fetch();
+
     
     $stmt = $pdo->prepare("
         SELECT u.user_id, u.username, u.password, r.role_name
@@ -29,6 +34,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
         
     }
+    $stmt = $pdo->prepare("SELECT u.*, r.role_name FROM j_users u JOIN j_role r ON u.role_id = r.role_id WHERE username = ?");
+    $stmt->execute([$username]);
+    $user = $stmt->fetch();
+
     // Verify password
     if ($user && password_verify($password, $user['password'])) {
         session_regenerate_id(true);

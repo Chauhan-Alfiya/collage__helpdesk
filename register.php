@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $nextRoleId = $lastRole['last_id'] + 1;
 
             // Insert new role
-            $roleName = strtoupper($username) . " ";
+            $roleName = strtoupper($username) . " "; 
             $stmtRole = $pdo->prepare("INSERT INTO roles (role_id, role_name) VALUES (?, ?)");
             $stmtRole->execute([$nextRoleId, $roleName]);
 
