@@ -2,6 +2,8 @@
 session_start();
 include 'includes/db.php';
 include 'includes/index_header.php';
+include 'includes/send_mail.php';
+
 
 
 $error = '';
@@ -48,6 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
                 );
                 $stmt->execute([$username, $email, $stream, $semester, $hashed_password]);
 
+                sendRegisterSuccessMail($email, $username);
                 header("Location: common_login.php");
                 exit();
             }
@@ -67,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
                      VALUES (?, ?, ?, ?)"
                 );
                 $stmt->execute([$username, $email, $department, $hashed_password]);
-
+                sendRegisterSuccessMail($email, $username);
                 header("Location: common_login.php");
                 exit();
             }
