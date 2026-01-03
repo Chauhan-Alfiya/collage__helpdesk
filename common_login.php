@@ -7,13 +7,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username']);
     $password = $_POST['password'];
     $user = null;
-   
 
-$stmt = $pdo->prepare("SELECT u.*, r.role_name FROM j_users u JOIN j_role r ON u.role_id = r.role_id WHERE username = ?");
+    $stmt = $pdo->prepare("SELECT u.*, r.role_name FROM j_users u JOIN j_role r ON u.role_id = r.role_id WHERE username = ?");
     $stmt->execute([$username]);
     $user = $stmt->fetch();
 
-    
     $stmt = $pdo->prepare("
         SELECT u.user_id, u.username, u.password, r.role_name
         FROM users u
@@ -22,22 +20,26 @@ $stmt = $pdo->prepare("SELECT u.*, r.role_name FROM j_users u JOIN j_role r ON u
     ");
     $stmt->execute([$username]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
-    
+ 
     if (!$user) {
         $stmt = $pdo->prepare("
-            SELECT u.user_id, u.username, u.password, r.role_name
-            FROM j_users u
-            JOIN j_role r ON u.role_id = r.role_id
-            WHERE u.username = ?
+            SELECT id AS user_id, username, password, 'STUDENT' AS role_name
+            FROM student
+            WHERE username = ?
         ");
         $stmt->execute([$username]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
-        
     }
-    $stmt = $pdo->prepare("SELECT u.*, r.role_name FROM j_users u JOIN j_role r ON u.role_id = r.role_id WHERE username = ?");
-    $stmt->execute([$username]);
-    $user = $stmt->fetch();
 
+    if (!$user) {
+        $stmt = $pdo->prepare("
+            SELECT id AS user_id, username, password, 'FACULTY' AS role_name
+            FROM faculty
+            WHERE username = ?
+        ");
+        $stmt->execute([$username]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    }
     // Verify password
     if ($user && password_verify($password, $user['password'])) {
         session_regenerate_id(true);
@@ -65,7 +67,6 @@ $stmt = $pdo->prepare("SELECT u.*, r.role_name FROM j_users u JOIN j_role r ON u
     }
 }
 ?>
-
 <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center;">
     <div class="card" style="width: 100%; max-width: 400px; padding: 2.5rem;">
         <div style="text-align: center; margin-bottom: 2rem;">

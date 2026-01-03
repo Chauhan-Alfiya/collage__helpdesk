@@ -145,12 +145,5 @@ CREATE TABLE faculty (
 );
 
 
-CREATE Table common_user (
-    user_id int not null AUTO_INCREMENT,
-    username varchar(100) not null,
-    password varchar(100) not null,
-    stream int not null,
-    FOREIGN KEY (`role_id`) REFERENCES `j_role`(`role_id`),
-    PRIMARY key (user_id)
-    
-);
+
+
