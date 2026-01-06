@@ -39,6 +39,7 @@
         <?php else: ?>
             <a href="login.php" class="btn btn-primary" style="margin-left: 15px; color: white; padding: 8px 20px;"><i class="fa-solid fa-lock"></i> Staff Login</a>
             <a href="logout.php" class="btn btn-primary" style="margin-left: 15px; color: white; padding: 8px 20px;"><i class="fa-solid fa-lock"></i> Logout</a>
+          <a href="sidebar.php"><i class="fa-solid fa-user"></i></a>
         <?php endif; ?>
     </div>
 </nav>
