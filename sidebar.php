@@ -5,27 +5,31 @@ $username = $_SESSION['username'] ?? 'User';
 
 <div class="profile-dropdown">
 
-    <button class="profile-btn">
-        <span class="avatar"><?= strtoupper($username[0]) ?></span>
-        <span class="caret">▾</span>
-    </button>
+    
 
     <div class="dropdown-menu">
+        <button class="profile-btn">
+        <span class="avatar" ><?= strtoupper($username[0]) ?></span>
+        
+    </button>
         <div class="menu-header">
-            Signed in as<br>
+            <span class="avatar"><?= strtoupper($username[0]) ?></span><br>
             <strong><?= htmlspecialchars($username) ?></strong>
         </div>
 
-        <a href="#" class="menu-item">Set status</a>
+        
 
         <div class="divider"></div>
 
         <a href="profile.php" class="menu-item">👤 Profile</a>
-        <a href="#" class="menu-item"></a>
-        <a href="#" class="menu-item">⭐ Stars
+        <a href="home.php" class="menu-item">🏠 Dashboard</a>
+        <a href="messages.php" class="menu-item">📧 Messages</a>
+
+        
         <div class="divider"></div>
 
         <a href="settings.php" class="menu-item">⚙ Settings</a>
+        
         <a href="logout.php" class="menu-item logout">🚪 Sign out</a>
     </div>
 
