@@ -39,7 +39,92 @@
         <?php else: ?>
             <a href="login.php" class="btn btn-primary" style="margin-left: 15px; color: white; padding: 8px 20px;"><i class="fa-solid fa-lock"></i> Staff Login</a>
             <a href="logout.php" class="btn btn-primary" style="margin-left: 15px; color: white; padding: 8px 20px;"><i class="fa-solid fa-lock"></i> Logout</a>
-          <a href="sidebar.php"><i class="fa-solid fa-user"></i></a>
+          <?php
+if (!isset($_SESSION)) session_start();
+$username = $_SESSION['username'] ?? 'User';
+?>
+
+<!-- TOGGLE -->
+<input type="checkbox" id="openProfile" hidden>
+
+<!-- PROFILE BUTTON (NO LINK) -->
+<label for="openProfile" class="profile-btn">
+    👤 Profile
+</label>
+
+<!-- SIDEBAR (SAME PAGE) -->
+<div class="profile-sidebar">
+    <label for="openProfile" class="close-btn">✖</label>
+
+    <div class="user">
+        <div class="avatar"><?= strtoupper($username[0]) ?></div>
+        <strong><?= htmlspecialchars($username) ?></strong>
+    </div>
+
+    <a href="settings.php">⚙ Settings</a>
+    <a href="messages.php">📧 Messages</a>
+    <a href="logout.php" class="logout">🚪 Logout</a>
+</div>
+<style>
+    .profile-btn {
+    cursor: pointer;
+    padding: 10px;
+    display: inline-block;
+    background: #e5e7eb;
+    border-radius: 6px;
+}
+
+/* SIDEBAR */
+.profile-sidebar {
+    position: fixed;
+    top: 0;
+    right: -300px;
+    width: 280px;
+    height: 100vh;
+    background: #fff;
+    box-shadow: -4px 0 20px rgba(0,0,0,0.2);
+    padding: 20px;
+    transition: 0.3s ease;
+}
+
+/* OPEN SIDEBAR */
+#openProfile:checked ~ .profile-sidebar {
+    right: 0;
+}
+
+.close-btn {
+    cursor: pointer;
+    font-size: 18px;
+    display: block;
+    margin-bottom: 20px;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    background: #2563eb;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.user {
+    margin-bottom: 20px;
+}
+
+.profile-sidebar a {
+    display: block;
+    margin: 10px 0;
+    text-decoration: none;
+}
+
+.logout {
+    color: red;
+}
+</style>
         <?php endif; ?>
     </div>
 </nav>
