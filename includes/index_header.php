@@ -32,7 +32,11 @@
         }
         
 ?>
-        <a href="index.php"><i class="fa-solid fa-house"></i> Home</a>     
+        <a href="index.php" style="font-weight: bold; text-align: center;"><i class="fa-solid fa-house"></i> Home</a>
+        <a href="about.php" style=" align-items: center;"> About</a>
+        <a href="services.php" style="font-weight: bold; align-items: center;"> Services</a> 
+        <a href="contact.php" style="font-weight: bold; align-items: center;">Contact</a>
+
         <?php if(isset($_SESSION['user_id'])): ?>
             <span class="user-badge"><i class="fa-solid fa-user"></i> <?= htmlspecialchars($_SESSION['username']) ?></span>
             <a href="logout.php"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>

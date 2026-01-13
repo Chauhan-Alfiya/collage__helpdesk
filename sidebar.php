@@ -1,227 +1,182 @@
-<?php
-if (!isset($_SESSION)) session_start();
-$username = $_SESSION['username'] ?? 'User';
-?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Helpdesk</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
 
-<div class="profile-dropdown">
-
-    <!-- Hidden Checkbox -->
-    <input type="checkbox" id="profileToggle" hidden>
-
-    <!-- Profile Icon -->
-    <label for="profileToggle" class="profile-btn">
-        <span class="avatar"><?= strtoupper($username[0]) ?></span>
-    </label>
-
-    <!-- Dropdown Menu -->
-    <div class="dropdown-menu">
-        <div class="menu-header">
-            <span class="avatar"><?= strtoupper($username[0]) ?></span><br>
-            <strong><?= htmlspecialchars($username) ?></strong>
-        </div>
-
-        <div class="divider"></div>
-
-        <a href="profile.php" class="menu-item">👤 Profile</a>
-        <a href="home.php" class="menu-item">🏠 Dashboard</a>
-        <a href="messages.php" class="menu-item">📧 Messages</a>
-
-        <div class="divider"></div>
-
-        <a href="settings.php" class="menu-item">⚙ Settings</a>
-        <a href="logout.php" class="menu-item logout">🚪 Sign out</a>
+<nav class="navbar">
+    <div class="brand">
+        <i class="fa-solid fa-graduation-cap"></i> College Helpdesk
     </div>
+    <div class="nav-right">
+        <a href="home.php"><i class="fa-solid fa-house"></i> Home</a>
 
-</div>
-<style>
-    .profile-dropdown {
-    position: relative;
+    <?php if ($user_id):?>
+
+        <input type="checkbox" id="openprofile" hidden>
+        <label for="openprofile" class="profile-btn">
+            <span class="avatar"><?= $initial ?></span>
+        </label>
+
+        <aside class="profile-sidebar">
+            <label for="openprofile" class="close-btn">✖</label>
+            <div class="user">
+                <div class="avatar large"><?= $initial ?></div>
+                <strong><?= htmlspecialchars($username) ?></strong>
+                <span class="role"><?= htmlspecialchars($role) ?></span>
+            </div>
+            <div class="divider"></div>
+            <nav class="menu">
+                <a href="profile.php"><i class="fa-solid fa-user"></i> Profile</a>
+                <a href="home.php"><i class="fa-solid fa-house"></i> Dashboard</a>
+                <a href="messages.php"><i class="fa-solid fa-envelope"></i> Messages</a>
+            </nav>
+            <div class="divider"></div>
+            <nav class="menu secondary">
+                <a href="settings.php"><i class="fa-solid fa-gear"></i> Settings</a>
+                <a href="logout.php" class="logout">
+                    <i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+            </nav>
+        </aside>
+        <?php else: ?>
+            <a href="login.php" class="btn btn-primary" style="margin-left: 15px; color: white; padding: 8px 20px;"><i class="fa-solid fa-lock"></i> Staff Login</a>
+            <a href="logout.php" class="btn btn-primary" style="margin-left: 15px; color: white; padding: 8px 20px;"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+        <?php endif; ?>
+    </div>
+</nav>
+
+<!-- ===========css========== -->
+    <style>
+body {
+    font-family: 'Inter', sans-serif;
 }
 
-/* Button */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 24px;
+    background: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.brand {
+    font-weight: 700;
+    font-size: 18px;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
 .profile-btn {
     cursor: pointer;
-    display: inline-flex;
 }
 
 .avatar {
-    width: 32px;
-    height: 32px;
+    width: 40px;
+    height: 40px;
     background: #2563eb;
     color: #fff;
     border-radius: 50%;
-    font-weight: 700;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-weight: bold;
 }
 
-/* Dropdown */
-.dropdown-menu {
-    position: absolute;
+.profile-sidebar {
+    position: fixed;
+    top: 0;
+    right: -320px;
+    width: 280px;
+    height: 100vh;
+    background: #ffffff;
+    box-shadow: -4px 0 20px rgba(0,0,0,0.15);
+    padding: 20px;
+    transition: right 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    z-index: 999;
+}
+
+#openProfile:checked ~ .profile-sidebar {
     right: 0;
-    top: 45px;
-    width: 240px;
-    background: #fff;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.12);
-    display: none;
-    z-index: 1000;
 }
 
-/* 🔥 Checkbox magic */
-#profileToggle:checked ~ .dropdown-menu {
-    display: block;
+.close-btn {
+    font-size: 18px;
+    text-align: right;
+    cursor: pointer;
 }
 
-.menu-header {
-    padding: 12px 16px;
-    font-size: 0.85rem;
+.avatar.large {
+    width: 60px;
+    height: 60px;
+    font-size: 20px;
 }
 
-.menu-item {
-    display: block;
-    padding: 10px 16px;
-    text-decoration: none;
-    color: #0f172a;
+.user {
+    text-align: center;
+    margin: 20px 0;
 }
 
-.menu-item:hover {
-    background: #f1f5f9;
+.role {
+    font-size: 13px;
+    color: #6b7280;
 }
 
 .divider {
     height: 1px;
-    background: #e2e8f0;
-    margin: 6px 0;
+    background: #e5e7eb;
+    margin: 15px 0;
 }
 
-.menu-item.logout {
+.menu a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #111827;
+}
+
+.menu a:hover {
+    background: #f3f4f6;
+}
+
+.logout {
+    margin-top: auto;
+    padding: 10px;
+    border-radius: 6px;
     color: #dc2626;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logout:hover {
+    background: #fee2e2;
+}
+
+.btn-primary {
+    background: #2563eb;
+    color: white;
+    padding: 8px 18px;
+    border-radius: 6px;
+    text-decoration: none;
 }
 </style>
 
-<!-- <?php
-if (!isset($_SESSION)) session_start();
-$username = $_SESSION['username'] ?? 'User';
-?>
-
-<div class="profile-dropdown">
-
-    
-
-    <div class="dropdown-menu">
-        <button class="profile-btn">
-        <span class="avatar" ><?= strtoupper($username[0]) ?></span>
-        
-    </button>
-        <div class="menu-header">
-            <span class="avatar"><?= strtoupper($username[0]) ?></span><br>
-            <strong><?= htmlspecialchars($username) ?></strong>
-        </div>
-
-        
-
-        <div class="divider"></div>
-
-        <a href="profile.php" class="menu-item">👤 Profile</a>
-        <a href="home.php" class="menu-item">🏠 Dashboard</a>
-        <a href="messages.php" class="menu-item">📧 Messages</a>
-
-        
-        <div class="divider"></div>
-
-        <a href="settings.php" class="menu-item">⚙ Settings</a>
-        
-        <a href="logout.php" class="menu-item logout">🚪 Sign out</a>
-    </div>
-
-</div>
-<style>
-    .profile-dropdown {
-    position: relative;
-}
-
-/* Button */
-.profile-btn {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 4px;
-}
-
-.avatar {
-    width: 32px;
-    height: 32px;
-    background: #2563eb;
-    color: #fff;
-    border-radius: 50%;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.caret {
-    font-size: 12px;
-    color: #64748b;
-}
-
-/* Dropdown menu */
-.dropdown-menu {
-    position: absolute;
-    right: 0;
-    top: 45px;
-    width: 240px;
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.12);
-    display: none;
-    z-index: 1000;
-    overflow: hidden;
-}
-
-/* 🔥 CSS MAGIC */
-.profile-dropdown:focus-within .dropdown-menu {
-    display: block;
-}
-
-.menu-header {
-    padding: 12px 16px;
-    font-size: 0.85rem;
-    color: #475569;
-}
-
-.menu-header strong {
-    color: #0f172a;
-}
-
-.menu-item {
-    display: block;
-    padding: 10px 16px;
-    text-decoration: none;
-    font-size: 0.9rem;
-    color: #0f172a;
-}
-
-.menu-item:hover {
-    background: #f1f5f9;
-}
-
-.divider {
-    height: 1px;
-    background: #e2e8f0;
-    margin: 6px 0;
-}
-
-.menu-item.logout {
-    color: #dc2626;
-}
-</style> -->
-
-
+</body>
+</html>

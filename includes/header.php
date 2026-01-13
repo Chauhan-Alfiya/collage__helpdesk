@@ -1,3 +1,14 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+$username = $_SESSION['username'] ?? null;
+$user_id  = $_SESSION['user_id'] ?? null;
+$role     = $_SESSION['role'] ?? 'Student';
+$initial  = $username ? strtoupper($username[0]) : '';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,89 +25,78 @@
     <div class="brand">
         <i class="fa-solid fa-graduation-cap"></i> College Helpdesk
     </div>
-    <div>
-        <?php
-         $home_link = 'home.php';
-        if (isset($_SESSION['role'])) {
-            if ($_SESSION['role'] == 'ADMIN') 
-                $home_link = 'admin_dashboard.php';
-            elseif (strpos($_SESSION['role'], '_CORD') !== false) 
-                $home_link = 'cord_dashboard.php';
-            elseif (strpos($_SESSION['role'], '_STAFF') !== false) 
-                $home_link = 'staff_dashboard.php';
-        }
-        ?>
-        
+    <div class="nav-right">
         <a href="home.php"><i class="fa-solid fa-house"></i> Home</a>
 
+    <?php if ($user_id):?>
 
-        
-
-
-<?php if(isset($_SESSION['user_id'])): ?>
-            <span class="user-badge" ><i class="fa-solid fa-user"></i> <?= htmlspecialchars($_SESSION['username']) ?></span>
-            <a href="logout.php"   ><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+        <input type="checkbox" id="openProfile" hidden>
+        <label for="openProfile" class="profile-btn">
+            <span class="avatar"><?= $initial ?></span>
+        </label>
+        <aside class="profile-sidebar">
+         <label for="openProfile" class="close-btn">✖</label>
+            <div class="user">
+                <div class="avatar"><?= $initial ?></div>
+                <strong><?= htmlspecialchars($username) ?></strong>
+                
+            </div>
+            <div class="divider"></div>
+            <nav class="menu">
+                <a href="profile.php"><i class="fa-solid fa-user"></i> Profile</a>
+                <a href="home.php"><i class="fa-solid fa-house"></i> Dashboard</a>
+                <a href="create_ticket.php"><i class="fa-solid fa-ticket"></i> My Ticket</a>
+                <a href="view_ticket.php"><i class="fa-solid fa-check"></i> Check Ticket</a>
+                <a href="messages.php"><i class="fa-solid fa-envelope"></i> Messages</a>
+            </nav>
+            <div class="divider"></div>
+            <nav class="menu secondary">
+                <a href="settings.php"><i class="fa-solid fa-gear"></i> Settings</a>
+                <a href="about.php" ><i class="fa-solid fa-info-circle"></i> About</a>
+            <a href="services.php" ><i class="fa-solid fa-cogs"></i> Services</a> 
+            <a href="contact.php" ><i class="fa-solid fa-phone"></i> Contact</a>  
+            </nav>
+             <div class="divider"></div>
+            <nav class="menu secondary">
+            <a href="logout.php" class="logout">
+                    <i class="fa-solid fa-right-from-bracket"></i> Sign Out</a>
+            </nav>
+        </aside>
         <?php else: ?>
             <a href="login.php" class="btn btn-primary" style="margin-left: 15px; color: white; padding: 8px 20px;"><i class="fa-solid fa-lock"></i> Staff Login</a>
-            <a href="logout.php" class="btn btn-primary" style="margin-left: 15px; color: white; padding: 8px 20px;"><i class="fa-solid fa-lock"></i> Logout</a>
-          <?php
-if (!isset($_SESSION)) session_start();
-$username = $_SESSION['username'] ?? 'User';
-?>
-
-<!-- TOGGLE -->
-<input type="checkbox" id="openProfile" hidden>
-
-<!-- PROFILE BUTTON (NO LINK) -->
-<label for="openProfile" class="profile-btn">
-    👤 Profile
-</label>
-
-<!-- SIDEBAR (SAME PAGE) -->
-<div class="profile-sidebar">
-    <label for="openProfile" class="close-btn">✖</label>
-
-    <div class="user">
-        <div class="avatar"><?= strtoupper($username[0]) ?></div>
-        <strong><?= htmlspecialchars($username) ?></strong>
+            <a href="logout.php" class="btn btn-primary" style="margin-left: 15px; color: white; padding: 8px 20px;"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+        <?php endif; ?>
     </div>
+</nav>
 
-    <a href="settings.php">⚙ Settings</a>
-    <a href="messages.php">📧 Messages</a>
-    <a href="logout.php" class="logout">🚪 Logout</a>
-</div>
-<style>
-    .profile-btn {
-    cursor: pointer;
-    padding: 10px;
-    display: inline-block;
-    background: #e5e7eb;
-    border-radius: 6px;
+<!-- ===========css========== -->
+    <style>
+body {
+    font-family: 'Inter', sans-serif;
 }
 
-/* SIDEBAR */
-.profile-sidebar {
-    position: fixed;
-    top: 0;
-    right: -300px;
-    width: 280px;
-    height: 100vh;
-    background: #fff;
-    box-shadow: -4px 0 20px rgba(0,0,0,0.2);
-    padding: 20px;
-    transition: 0.3s ease;
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 24px;
+    background: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
 }
 
-/* OPEN SIDEBAR */
-#openProfile:checked ~ .profile-sidebar {
-    right: 0;
-}
-
-.close-btn {
-    cursor: pointer;
+.brand {
+    font-weight: 700;
     font-size: 18px;
-    display: block;
-    margin-bottom: 20px;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.profile-btn {
+    cursor: pointer;
 }
 
 .avatar {
@@ -111,20 +111,89 @@ $username = $_SESSION['username'] ?? 'User';
     font-weight: bold;
 }
 
-.user {
-    margin-bottom: 20px;
+.profile-sidebar {
+    position: fixed;
+    top: 0;
+    right: -320px;
+    width: 280px;
+    height: 100vh;
+    background: #ffffff;
+    box-shadow: -4px 0 20px rgba(0,0,0,0.15);
+    padding: 20px;
+    transition: right 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    z-index: 999;
 }
 
-.profile-sidebar a {
-    display: block;
-    margin: 10px 0;
+#openProfile:checked ~ .profile-sidebar {
+    right: 0;
+}
+
+.close-btn {
+    font-size: 18px;
+    text-align: right;
+    cursor: pointer;
+}
+
+.avatar.large {
+    width: 60px;
+    height: 60px;
+    font-size: 20px;
+}
+
+.user {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.role {
+    font-size: 13px;
+    color: #c4c5c8;
+}
+
+.divider {
+    height: 1px;
+    background: #e5e7eb;
+    margin: 15px 0;
+}
+
+.menu a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 6px;
     text-decoration: none;
+    color: #111827;
+}
+
+.menu a:hover {
+    background: #f3f4f6;
 }
 
 .logout {
-    color: red;
+    margin-top: auto;
+    padding: 10px;
+    border-radius: 6px;
+    color: #dc2626;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logout:hover {
+    background: #fee2e2;
+}
+
+.btn-primary {
+    background: #2563eb;
+    color: white;
+    padding: 8px 18px;
+    border-radius: 6px;
+    text-decoration: none;
 }
 </style>
-        <?php endif; ?>
-    </div>
-</nav>
+
+
