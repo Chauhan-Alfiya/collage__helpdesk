@@ -5,7 +5,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
 $username = $_SESSION['username'] ?? null;
 $user_id  = $_SESSION['user_id'] ?? null;
-
+$role     = $_SESSION['role'] ?? 'Student';
 $initial  = $username ? strtoupper($username[0]) : '';
 ?>
 
