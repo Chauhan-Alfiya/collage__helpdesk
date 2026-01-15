@@ -32,8 +32,8 @@
         }
         
 ?>
-        <a href="index.php" style="font-weight: bold; text-align: center;"><i class="fa-solid fa-house"></i> Home</a>
-        <a href="about.php" style=" align-items: center;"> About</a>
+        <a href="index.php" style="font-weight: bold; text-align: center;"> Home</a>
+        <a href="about.php" style=" align-items: center; font-weight: bold;  text-align: center;"> About</a>
         <a href="services.php" style="font-weight: bold; align-items: center;"> Services</a> 
         <a href="contact.php" style="font-weight: bold; align-items: center;">Contact</a>
 
@@ -41,7 +41,7 @@
             <span class="user-badge"><i class="fa-solid fa-user"></i> <?= htmlspecialchars($_SESSION['username']) ?></span>
             <a href="logout.php"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
         <?php else: ?>
-            <a href="common_login.php" class="btn btn-primary" style="margin-left: 15px; color: white; padding: 8px 20px;"><i class="fa-solid fa-lock"></i> Login</a>
+            <a href="common_login.php" class="btn btn-primary" style="margin-left: 15px; color: white; padding: 8px 20px;"><i class="fa-solid fa-lock"></i> Log in</a>
         <?php endif; ?>
     </div>
 </nav>
