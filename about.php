@@ -13,7 +13,7 @@
     </div>
 </section>
 
-<
+
 <main class="about-main container">
     <div class="about-grid">
         <div class="about-text">

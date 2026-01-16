@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 ?>
 
-<div class="container">
+<div class="container" >
     <h2>Create New Ticket</h2>
     <?= $msg ?>
     <form method="POST" enctype="multipart/form-data">

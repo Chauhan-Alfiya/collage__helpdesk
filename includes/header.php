@@ -1,4 +1,6 @@
 <?php
+
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -7,6 +9,9 @@ $username = $_SESSION['username'] ?? null;
 $user_id  = $_SESSION['user_id'] ?? null;
 $role     = $_SESSION['role'] ?? 'Student';
 $initial  = $username ? strtoupper($username[0]) : ''; 
+
+
+
 ?>
 
 <!DOCTYPE html>
@@ -45,7 +50,7 @@ $initial  = $username ? strtoupper($username[0]) : '';
             <nav class="menu">
                 <a href="profile.php"><i class="fa-solid fa-user"></i> Profile</a>
                 <a href="home.php"><i class="fa-solid fa-house"></i> Dashboard</a>
-                <a href="create_ticket.php"><i class="fa-solid fa-ticket"></i> My Ticket</a>
+                <a href="myticket.php"><i class="fa-solid fa-ticket"></i> My Ticket</a>
                 <a href="view_ticket.php"><i class="fa-solid fa-check"></i> Check Ticket</a>
                 <a href="messages.php"><i class="fa-solid fa-envelope"></i> Messages</a>
             </nav>
