@@ -69,6 +69,7 @@ CREATE TABLE `tickets` (
   UNIQUE KEY `ticket_number` (`ticket_number`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
 -- 4. Ticket Comments Table
 CREATE TABLE `ticket_comments` (
   `comment_id` int NOT NULL AUTO_INCREMENT,
@@ -143,7 +144,5 @@ CREATE TABLE faculty (
     PRIMARY KEY (id),
     UNIQUE KEY email (email)
 );
-
-
 
 

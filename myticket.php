@@ -3,15 +3,25 @@
 include 'includes/db.php';
 include 'includes/header.php';
 
-$tickets = [];
+    $tickets = [];
 
 
-if (isset($_POST[''])) {
-    // Search by Ticket Number OR Email
     $stmt = $pdo->prepare("SELECT * FROM tickets WHERE ticket_number = ? OR requester_email = ? ORDER BY created_at DESC");
-    $stmt->execute([$search, $search]);
     $tickets = $stmt->fetchAll();
-}
+    if (isset($_SESSION['role'])) {
+            if ($_SESSION['role'] == 'ADMIN') 
+                $home_link = 'home.php'; 
+
+             elseif ($_SESSION['role'] == 'STUDENT') 
+                 $home_link = 'home.php';
+            elseif ($_SESSION['role'] == 'FACULTY') 
+                 $home_link = 'home.php';
+                
+            elseif (strpos($_SESSION['role'], '_CORD') !== false) 
+                $home_link = 'home.php';
+            elseif (strpos($_SESSION['role'], '_STAFF') !== false) 
+                $home_link = 'home.php';
+        }
 ?>
 <div class="container">
     <h2>My Tickets</h2>
@@ -37,9 +47,9 @@ if (isset($_POST[''])) {
             </tr>
             <?php endforeach; ?>
         </table>
-    <?php elseif(isset($_POST['search'])): ?>
+    <?php elseif(isset($_POST['my tickets'])): ?>
         <p>No tickets found.</p>
     <?php endif; ?>
 </div>
-<?php include 'includes/footer.php'; ?>
+
 </div>

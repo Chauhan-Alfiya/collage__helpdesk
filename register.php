@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $hashed_password = password_hash($password, PASSWORD_BCRYPT);
             $stmt = $pdo->prepare("INSERT INTO users (username, email, password, role_id) VALUES (?, ?, ?, ?)");
             $stmt->execute([$username,$email, $hashed_password, $nextRoleId]); // Use the new role_id
-            header("Location: login.php");
+            //header("Location: login.php");
             exit;
         }
     }

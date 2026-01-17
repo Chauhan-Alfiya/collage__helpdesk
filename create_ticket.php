@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <select name="stream" class="form-control" required>
                 <option value="MCA">MCA</option>
                 <option value="BBA">BBA</option>
-                <option value="BCA">BCA</option>
+                <option value="BCA">BCOM</option>
                 </select>
         </div>
         <div class="form-group">

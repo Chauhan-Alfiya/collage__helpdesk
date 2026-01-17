@@ -2,64 +2,68 @@
 session_start();
 include 'includes/db.php';
 include 'includes/functions.php';
-include 'includes/header.php';
 
 $ticket_id = $_GET['id'] ?? 0;
 $is_public = isset($_GET['public']);
 $user_role = $_SESSION['role'] ?? '';
 $user_id   = $_SESSION['user_id'] ?? 0;
- 
-// Fetch Ticket
+
+/* ================= FETCH TICKET ================= */
+
 $stmt = $pdo->prepare("SELECT * FROM tickets WHERE ticket_id = ?");
 $stmt->execute([$ticket_id]);
 $ticket = $stmt->fetch();
 
-if(!$ticket) die("Ticket not found");
+if (!$ticket) {
+    die("Ticket not found");
+}
 
-// Fetch Comments
-$stmt = $pdo->prepare("SELECT tc.*, u.username FROM ticket_comments tc LEFT JOIN users u ON tc.user_id = u.user_id WHERE ticket_id = ? ORDER BY created_at ASC");
-$stmt->execute([$ticket_id]);
-$comments = $stmt->fetchAll();
+/* ================= HANDLE POST (BEFORE OUTPUT) ================= */
 
-// Handle Status Updates (Only logged in)
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && !$is_public) {
-    $comment = $_POST['comment'];
-    $new_status = $ticket['status']; // Default no change
+
+    $comment = $_POST['comment'] ?? '';
+    $new_status = $ticket['status'];
     $assigned_user_id = $ticket['assigned_user_id'];
-    
-    // Logic for Coordinator
+
+    // Coordinator logic
     if (strpos($user_role, '_CORD') !== false) {
-        if (isset($_POST['assign_staff'])) {
+
+        if (isset($_POST['assign_staff']) && $ticket['status'] === 'OPEN') {
             $new_status = 'IN-PROGRESS';
             $assigned_user_id = getStaffIdByCoordinator($pdo, $user_id);
-        } elseif (isset($_POST['close_ticket'])) {
+        }
+
+        if (isset($_POST['close_ticket']) && $ticket['status'] === 'RESOLVED') {
             $new_status = 'CLOSED';
-            // Update closed_at
-            $pdo->prepare("UPDATE tickets SET closed_at = NOW() WHERE ticket_id = ?")->execute([$ticket_id]);
+            $pdo->prepare("UPDATE tickets SET closed_at = NOW() WHERE ticket_id = ?")
+                ->execute([$ticket_id]);
         }
     }
-    // Logic for Staff
-    if (strpos($user_role, '_STAFF') !== false && isset($_POST['resolve_ticket'])) {
+
+    // Staff logic
+    if (strpos($user_role, '_STAFF') !== false && isset($_POST['resolve_ticket']) && $ticket['status'] === 'IN-PROGRESS') {
         $new_status = 'RESOLVED';
-        // Assign back to Coordinator (whoever assigned it to staff?)
-        // Simplification: Find the CORD for this stream/cat
         $assigned_user_id = getCoordinatorId($pdo, $ticket['category'], $ticket['stream']);
-        $pdo->prepare("UPDATE tickets SET resolved_at = NOW() WHERE ticket_id = ?")->execute([$ticket_id]);
+        $pdo->prepare("UPDATE tickets SET resolved_at = NOW() WHERE ticket_id = ?")
+            ->execute([$ticket_id]);
     }
 
-    // Update DB
-    $sql = "UPDATE tickets SET status = ?, assigned_user_id = ? WHERE ticket_id = ?";
-    $pdo->prepare($sql)->execute([$new_status, $assigned_user_id, $ticket_id]);
+    // Update ticket
+    $pdo->prepare(
+        "UPDATE tickets SET status = ?, assigned_user_id = ? WHERE ticket_id = ?"
+    )->execute([$new_status, $assigned_user_id, $ticket_id]);
 
-    // Add Comment
+    // Add comment
     if (!empty($comment)) {
-        $pdo->prepare("INSERT INTO ticket_comments (ticket_id, user_id, comment_text) VALUES (?, ?, ?)")->execute([$ticket_id, $user_id, $comment]);
+        $pdo->prepare(
+            "INSERT INTO ticket_comments (ticket_id, user_id, comment_text)
+             VALUES (?, ?, ?)"
+        )->execute([$ticket_id, $user_id, $comment]);
     }
-    
-    // Refresh
-    // header("Location: ticket_details.php?id=$ticket_id");
-    // exit;
-    if ($user_role == 'ADMIN') {
+
+    // Redirect (NO OUTPUT HAS HAPPENED YET ✅)
+    if ($user_role === 'ADMIN') {
         header("Location: admin_dashboard.php");
     } elseif (strpos($user_role, '_CORD') !== false) {
         header("Location: cord_dashboard.php");
@@ -71,12 +75,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !$is_public) {
     exit;
 }
 
-// Fetch Attachments
+/* ================= NOW SAFE TO OUTPUT ================= */
+
+include 'includes/header.php';
+
+/* ================= FETCH COMMENTS ================= */
+
+$stmt = $pdo->prepare("
+    SELECT tc.*, u.username 
+    FROM ticket_comments tc 
+    LEFT JOIN users u ON tc.user_id = u.user_id 
+    WHERE ticket_id = ? 
+    ORDER BY created_at ASC
+");
+$stmt->execute([$ticket_id]);
+$comments = $stmt->fetchAll();
+
+/* ================= FETCH ATTACHMENT ================= */
+
 $stmtAtt = $pdo->prepare("SELECT attachment_id, filename FROM ticket_attachments WHERE ticket_id = ?");
 $stmtAtt->execute([$ticket_id]);
 $attachment = $stmtAtt->fetch();
 ?>
-
 <div class="container">
     <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom: 1.5rem;">
         <h2 style="margin: 0; border: none;">Ticket #<?= $ticket['ticket_number'] ?></h2>
