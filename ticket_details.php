@@ -8,6 +8,13 @@ $is_public = isset($_GET['public']);
 $user_role = $_SESSION['role'] ?? '';
 $user_id   = $_SESSION['user_id'] ?? 0;
 
+
+if ($_SESSION['login_type'] === 'STUDENT' || $_SESSION['login_type'] === 'FACULTY') {
+    if ($ticket['requester_email'] !== $_SESSION['email']) {
+        die("Unauthorized Access");
+    }
+}
+
 /* ================= FETCH TICKET ================= */
 
 $stmt = $pdo->prepare("SELECT * FROM tickets WHERE ticket_id = ?");
