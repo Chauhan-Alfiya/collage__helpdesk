@@ -34,7 +34,6 @@ $initial  = $username ? strtoupper($username[0]) : '';
         <a href="home.php"><i class="fa-solid fa-house"></i> Home</a>
 
     <?php if ($user_id):?>
-
         <input type="checkbox" id="openProfile" hidden>
         <label for="openProfile" class="profile-btn">
             <span class="avatar"><?= $initial ?></span>

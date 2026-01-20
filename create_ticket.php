@@ -1,49 +1,81 @@
- <?php
+<?php
+session_start();
+
 include 'includes/db.php';
 include 'includes/functions.php';
-include 'includes/header.php';
 
 $msg = "";
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $requester_type = $_POST['requester_type'];
-    $email = $_POST['email'];
-    $stream = $_POST['stream'];
-    $category = $_POST['category'];
-    $title = $_POST['title'];
-    $desc = $_POST['description'];
 
-    // Routing Logic
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+    $requester_type = $_POST['requester_type'];
+    $email          = $_POST['email'];
+    $stream         = $_POST['stream'];
+    $category       = $_POST['category'];
+    $title          = $_POST['title'];
+    $desc           = $_POST['description'];
+
+    // Find coordinator
     $assigned_to = getCoordinatorId($pdo, $category, $stream);
-    
+
     if ($assigned_to) {
+
+        // Generate ticket number
         $ticket_num = generateTicketNumber();
-        
-        // Insert Ticket
-        $sql = "INSERT INTO tickets (ticket_number, requester_email, requester_type, stream, category, title, description, assigned_user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+        // Insert ticket
+        $sql = "INSERT INTO tickets
+        (ticket_number, requester_email, requester_type, stream, category, title, description, assigned_user_id)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
         $stmt = $pdo->prepare($sql);
-        $stmt->execute([$ticket_num, $email, $requester_type, $stream, $category, $title, $desc, $assigned_to]);
+        $stmt->execute([
+            $ticket_num,
+            $email,
+            $requester_type,
+            $stream,
+            $category,
+            $title,
+            $desc,
+            $assigned_to
+        ]);
+
         $ticket_id = $pdo->lastInsertId();
 
-        // Handle Attachment
-        if (isset($_FILES['attachment']) && $_FILES['attachment']['error'] == 0) {
-            $fileName = $_FILES['attachment']['name'];
-            $fileType = $_FILES['attachment']['type'];
-            $fileData = file_get_contents($_FILES['attachment']['tmp_name']);
-            $stmtAtt = $pdo->prepare("INSERT INTO ticket_attachments (ticket_id, filename, file_data, mime_type) VALUES (?, ?, ?, ?)");
-            $stmtAtt->execute([$ticket_id, $fileName, $fileData, $fileType]);
+        // Attachment
+        if (!empty($_FILES['attachment']['name'])) {
+            $stmtAtt = $pdo->prepare(
+                "INSERT INTO ticket_attachments (ticket_id, filename, file_data, mime_type)
+                 VALUES (?, ?, ?, ?)"
+            );
+            $stmtAtt->execute([
+                $ticket_id,
+                $_FILES['attachment']['name'],
+                file_get_contents($_FILES['attachment']['tmp_name']),
+                $_FILES['attachment']['type']
+            ]);
         }
 
-        $msg = "<div class='alert success'>Ticket created successfully! Your Ticket ID is <strong>$ticket_num</strong>. Please save this.</div>";
+        // Save email for My Tickets page
+        $_SESSION['user_email'] = $email;
+
+        // Redirect
+        header("Location: myticket.php");
+        exit;
+
     } else {
-        $msg = "<div class='alert error'>Error: Could not find a coordinator for this selection. Please contact admin.</div>";
+        $msg = "<div class='alert error'>No coordinator found.</div>";
     }
 }
 ?>
 
-<div class="container" >
+<?php include 'includes/header.php'; ?>
+
+<div class="container">
     <h2>Create New Ticket</h2>
     <?= $msg ?>
-    <form method="POST" enctype="multipart/form-data">
+
+     <form method="POST" enctype="multipart/form-data">
         <div class="form-group">
             <label>I am a:</label>
             <select name="requester_type" class="form-control" required>
@@ -87,4 +119,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <button type="submit" class="btn">Submit Ticket</button>
     </form>
 </div>
+
 <?php include 'includes/footer.php'; ?>
