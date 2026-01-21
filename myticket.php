@@ -1,49 +1,58 @@
 <?php
-session_start();
 include 'includes/db.php';
-include 'includes/header.php';
+include 'includes/functions.php';
 
-if (!isset($_SESSION['user_email'])) {
-    echo "<p>Please create a ticket first.</p>";
-    include 'includes/footer.php';
+// Get email from URL
+$email = $_GET['email'] ?? '';
+
+if (!$email) {
+    echo "No user specified.";
     exit;
 }
 
-$email = $_SESSION['user_email'];
-
-$sql = "SELECT ticket_number, title, category, status, created_at
-        FROM tickets
-        WHERE requester_email = ?
+// Fetch tickets for this user
+$sql = "SELECT ticket_number, title, category, stream, created_at 
+        FROM tickets 
+        WHERE requester_email = ? 
         ORDER BY created_at DESC";
 
 $stmt = $pdo->prepare($sql);
 $stmt->execute([$email]);
-$tickets = $stmt->fetchAll();
+$tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
+
+<?php include 'includes/header.php'; ?>
 
 <div class="container">
     <h2>My Tickets</h2>
 
-    <?php if ($tickets): ?>
-    <table border="1" cellpadding="8">
-        <tr>
-            <th>Ticket No</th>
-            <th>Title</th>
-            <th>Category</th>
-            <th>Status</th>
-            <th>Date</th>
-        </tr>
-
-        <?php foreach ($tickets as $t): ?>
-        <tr>
-            <td><?= htmlspecialchars($t['ticket_number']) ?></td>
-            <td><?= htmlspecialchars($t['title']) ?></td>
-            <td><?= htmlspecialchars($t['category']) ?></td>
-            <td><?= htmlspecialchars($t['status']) ?></td>
-            <td><?= htmlspecialchars($t['created_at']) ?></td>
-        </tr>
-        <?php endforeach; ?>
-    </table>
+    <?php if (!empty($tickets)): ?>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Ticket Number</th>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Stream</th>
+                    <th>Created At</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($tickets as $ticket): ?>
+                    <tr>
+                        <td>
+                            <a href="ticket_view.php?ticket=<?= htmlspecialchars($ticket['ticket_number']) ?>">
+                                <?= htmlspecialchars($ticket['ticket_number']) ?>
+                            </a>
+                        </td>
+                        <td><?= htmlspecialchars($ticket['title']) ?></td>
+                        <td><?= htmlspecialchars($ticket['category']) ?></td>
+                        <td><?= htmlspecialchars($ticket['stream']) ?></td>
+                        <td><?= htmlspecialchars($ticket['created_at']) ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
     <?php else: ?>
         <p>No tickets found.</p>
     <?php endif; ?>
