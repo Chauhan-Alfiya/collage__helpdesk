@@ -1,39 +1,30 @@
 <?php
-session_start();
-
 include 'includes/db.php';
 include 'includes/functions.php';
 
 $msg = "";
 
-/* CSRF Token */
-if (empty($_SESSION['csrf'])) {
-    $_SESSION['csrf'] = bin2hex(random_bytes(32));
-}
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $requester_type = $_POST['requester_type'];
+    $email          = $_POST['email'];
+    $stream         = $_POST['stream'];
+    $category       = $_POST['category'];
+    $title          = $_POST['title'];
+    $desc           = $_POST['description'];
 
-    /* CSRF Check */
-    if (!isset($_POST['csrf']) || $_POST['csrf'] !== $_SESSION['csrf']) {
-        die('Invalid CSRF Token');
-    }
-
-    $requester_type = trim($_POST['requester_type']);
-    $email          = trim($_POST['email']);
-    $stream         = trim($_POST['stream']);
-    $category       = trim($_POST['category']);
-    $title          = trim($_POST['title']);
-    $desc           = trim($_POST['description']);
-
+  
     $assigned_to = getCoordinatorId($pdo, $category, $stream);
 
     if ($assigned_to) {
 
+       
         $ticket_num = generateTicketNumber();
 
-        $sql = "INSERT INTO tickets 
-                (ticket_number, requester_email, requester_type, stream, category, title, description, assigned_user_id, status, created_at) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'OPEN', NOW())";
+        
+        $sql = "INSERT INTO tickets
+        (ticket_number, requester_email, requester_type, stream, category, title, description, assigned_user_id)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
@@ -49,59 +40,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $ticket_id = $pdo->lastInsertId();
 
-        /* File Upload */
+      
         if (!empty($_FILES['attachment']['name'])) {
-
-            $allowedTypes = ['application/pdf', 'image/jpeg', 'image/png'];
-            $maxSize = 5 * 1024 * 1024; // 5MB
-
-            $finfo = finfo_open(FILEINFO_MIME_TYPE);
-            $mime  = finfo_file($finfo, $_FILES['attachment']['tmp_name']);
-            finfo_close($finfo);
-
-            if ($_FILES['attachment']['size'] > $maxSize) {
-
-                $msg = "<div class='alert error-alert'>File size exceeds 5MB limit.</div>";
-
-            } elseif (!in_array($mime, $allowedTypes)) {
-
-                $msg = "<div class='alert error-alert'>Invalid file format. Only PDF, JPG, PNG allowed.</div>";
-
-            } else {
-
-                $stmtAtt = $pdo->prepare("
-                    INSERT INTO ticket_attachments 
-                    (ticket_id, filename, file_data, mime_type) 
-                    VALUES (?, ?, ?, ?)
-                ");
-
-                $stmtAtt->execute([
-                    $ticket_id,
-                    $_FILES['attachment']['name'],
-                    file_get_contents($_FILES['attachment']['tmp_name']),
-                    $mime
-                ]);
-            }
+            $stmtAtt = $pdo->prepare(
+                "INSERT INTO ticket_attachments (ticket_id, filename, file_data, mime_type)
+                 VALUES (?, ?, ?, ?)"
+            );
+            $stmtAtt->execute([
+                $ticket_id,
+                $_FILES['attachment']['name'],
+                file_get_contents($_FILES['attachment']['tmp_name']),
+                $_FILES['attachment']['type']
+            ]);
         }
 
-        if ($msg === "") {
-            $emailSafe = htmlspecialchars($email, ENT_QUOTES, 'UTF-8');
-
-            $msg = "
-            <div class='alert success-alert'>
-                <div class='alert-icon'><i class='fas fa-check-circle'></i></div>
-                <div class='alert-text'>
-                    <strong>Ticket Created!</strong> Your reference is <b>#$ticket_num</b>.
-                    <br><a href='myticket.php?email=$emailSafe'>Track your ticket here &rarr;</a>
-                </div>
-            </div>";
-        }
+        
+        $msg = "
+        <div class='alert success'>
+            Ticket Created Successfully! <br><br>
+            <b>Your Ticket Number:</b>
+            <a href='ticket_view.php?ticket=$ticket_num'>$ticket_num</a>
+            <br><br>
+            <a href='myticket.php?email=$email'>View All My Tickets</a>
+        </div>
+        ";
 
     } else {
-        $msg = "<div class='alert error-alert'>
-                    <i class='fas fa-exclamation-circle'></i>
-                    Assignment failed. Please contact support.
-                </div>";
+        $msg = "<div class='alert error'>No coordinator found.</div>";
     }
 }
 ?>
