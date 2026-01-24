@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 ?>
 
-<?php include 'includes/header.php'; ?>
+<?php include 'includes/header.php'; ?> 
 
 
 <link rel="stylesheet" href="css/create_ticket.css">
