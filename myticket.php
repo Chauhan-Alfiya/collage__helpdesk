@@ -2,10 +2,9 @@
 include 'includes/db.php';
 include 'includes/header.php';
 
-$email = $_GET['email'] ?? ''; // URL se email le raha hai
+$email = $_GET['email'] ?? ''; 
 
 if ($email) {
-    // Database se us email ke saare tickets nikalna
     $stmt = $pdo->prepare("SELECT * FROM tickets WHERE requester_email = ? ORDER BY created_at DESC");
     $stmt->execute([$email]);
     $tickets = $stmt->fetchAll();
