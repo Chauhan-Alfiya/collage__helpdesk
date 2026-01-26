@@ -1,0 +1,96 @@
+/* Sidebar Specific CSS - Only for Sidebar */
+.profile-sidebar {
+    position: fixed;
+    top: 0;
+    right: -320px; /* Hidden by default */
+    width: 280px;
+    height: 100vh;
+    background: #ffffff;
+    box-shadow: -4px 0 20px rgba(0,0,0,0.15);
+    padding: 20px;
+    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+}
+
+/* Toggle Logic */
+#openProfile:checked ~ .profile-sidebar {
+    right: 0;
+}
+
+#openProfile:checked ~ .sidebar-overlay {
+    display: block;
+}
+
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.2);
+    display: none;
+    z-index: 999;
+}
+
+/* Sidebar Elements */
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+}
+
+.sidebar-user-card {
+    text-align: center;
+    padding: 20px 0;
+    background: #f8fafc;
+    border-radius: 12px;
+    margin: 15px 0;
+}
+
+.avatar-large {
+    width: 60px; height: 60px;
+    background: #2563eb;
+    color: white;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 10px;
+    font-size: 24px; font-weight: bold;
+}
+
+.sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.sidebar-menu a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    text-decoration: none;
+    color: #334155;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: 0.2s;
+}
+
+.sidebar-menu a:hover {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.sidebar-menu a i { width: 20px; text-align: center; }
+
+.logout-link {
+    margin-top: auto;
+    color: #dc2626 !important;
+}
+
+.logout-link:hover {
+    background: #fee2e2 !important;
+}

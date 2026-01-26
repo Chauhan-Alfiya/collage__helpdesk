@@ -21,7 +21,7 @@ INSERT INTO `roles` (`role_name`) VALUES
 ( 'TECH_STAFF'),
 ( 'FACILITY_CORD'), 
 ( 'FACILITY_STAFF');
--- Note: You can add more stream roles here following the pattern
+
 
 -- 2. Users Table
 CREATE TABLE `users` (
