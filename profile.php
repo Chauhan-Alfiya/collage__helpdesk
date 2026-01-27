@@ -21,6 +21,36 @@ if ($profile_data) {
     $role_name = $profile_data['role_name'];
 } 
 else {
+    $stmt = $pdo->prepare("SELECT *, 'ADMIN' as role_name FROM users WHERE username = ?");
+    $stmt->execute([$username]);
+    $profile_data = $stmt->fetch();
+
+    if ($profile_data) {
+        $role_name = "Administrator";
+    }
+
+    else if {
+        $stmt = $pdo->prepare("SELECT *, 'COORDINATOR' as role_name FROM users WHERE username = ?");
+        $stmt->execute([$username]);
+        $profile_data = $stmt->fetch();
+
+        if ($profile_data) {
+            $role_name = "Coordinator";
+        }
+    }
+    else if {
+        $stmt = $pdo->prepare("SELECT *, 'HELPDESK STAFF' as role_name FROM users WHERE username = ?");
+        $stmt->execute([$username]);
+        $profile_data = $stmt->fetch();
+
+        if ($profile_data) {
+            $role_name = "Helpdesk Staff";
+        }
+    }
+    
+
+}
+if (!$profile_data) {
     $stmt = $pdo->prepare("SELECT *, 'STUDENT' as role_name FROM student WHERE username = ?");
     $stmt->execute([$username]);
     $profile_data = $stmt->fetch();
@@ -49,7 +79,7 @@ include 'includes/header.php';
 <link rel="stylesheet" href="css/profile.css">
 <div class="profile-actions">
             <a href="home.php" class="back-btn">
-                <i class="fas fa-chevron-left"></i> Back to Dashboard
+                <i class="fas fa-chevron-left"></i> 
             </a>
         </div>
 <div class="profile-wrapper">
@@ -95,11 +125,7 @@ include 'includes/header.php';
             </div>
         </div>
         
-        <div class="profile-actions">
-            <a href="home.php" class="back-btn">
-                <i class="fas fa-chevron-left"></i> Back to Dashboard
-            </a>
-        </div>
+        
     </div>
 </div>
 

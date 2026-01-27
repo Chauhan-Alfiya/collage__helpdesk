@@ -15,7 +15,7 @@ $stmt->execute([$ticket_num]);
 $ticket = $stmt->fetch();
 
 if (!$ticket) {
-    die("Ticket nahi mili!");
+    die("Ticket not found.");
 }
 
 if (isset($_POST['save_changes'])) {

@@ -1,0 +1,102 @@
+/* --- Settings Page Specific Styles --- */
+.settings-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.settings-card {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    border: 1px solid #e2e8f0;
+    margin-bottom: 25px;
+}
+
+.settings-header {
+    padding: 25px 30px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.settings-header h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.settings-body {
+    padding: 30px;
+}
+
+/* Form Styling */
+.settings-form-group {
+    margin-bottom: 20px;
+}
+
+.settings-form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    color: #64748b;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
+.settings-input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 14px;
+    transition: 0.3s;
+    box-sizing: border-box;
+}
+
+.settings-input:focus {
+    border-color: #2563eb;
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+}
+
+.btn-update {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-update:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+}
+
+/* Danger Zone */
+.danger-zone {
+    border: 1px solid #fecaca;
+    background: #fff1f2;
+}
+
+.danger-zone h3 {
+    color: #e11d48;
+}
+
+.btn-delete {
+    background: #e11d48;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.btn-delete:hover {
+    background: #be123c;
+}

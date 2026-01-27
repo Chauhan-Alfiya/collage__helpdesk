@@ -35,24 +35,7 @@ if ($user) {
 
 include 'includes/header.php';
 ?>
-
-<style>
-    body { background-color: #f4f7fe; font-family: 'Inter', sans-serif; }
-    .ticket-container { max-width: 1100px; margin: 50px auto; padding: 0 20px; }
-    .card-header { background: white; padding: 25px; border-radius: 15px 15px 0 0; border-bottom: 1px solid #edf2f7; display: flex; justify-content: space-between; align-items: center; }
-    .main-card { background: white; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); overflow: hidden; }
-    .table { width: 100%; border-collapse: collapse; }
-    .table th { background: #f8fafc; padding: 15px; text-align: left; color: #64748b; font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px; }
-    .table td { padding: 18px 15px; border-bottom: 1px solid #f1f5f9; color: #334155; font-size: 14px; }
-    .status-badge { padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; text-transform: capitalize; }
-    .status-open { background: #fef3c7; color: #92400e; }
-    .status-in-progress { background: #e0f2fe; color: #075985; }
-    .status-resolved { background: #dcfce7; color: #166534; }
-    .btn-view { color: #2563eb; text-decoration: none; font-weight: 500; display: flex; align-items: center; gap: 5px; }
-    .btn-view:hover { color: #1e40af; }
-    .empty-state { padding: 60px; text-align: center; color: #94a3b8; }
-    .btn-new-ticket { background: #1e40af; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-size: 14px; transition: 0.3s; }
-</style>
+     
 
 <div class="ticket-container">
     <div class="main-card">

@@ -1,109 +1,265 @@
-<footer style="background: #1a2332; color: #fff; padding: 50px 20px 30px; margin-top: 60px;">
-    <div style="max-width: 1400px; margin: 0 auto;">
-        
-        <!-- Top Row: Logo, Contact Info, Social Media, Newsletter -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 60px; padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.2);">
+<style>
+    /* Footer Styles */
+.main-footer {
+     background: linear-gradient(135deg, #0f172a 0%, #1e40af 100%); /* Deep modern navy */
+    color: #f8fafc;
+    padding: 80px 0 30px;
+    margin-top: 60px;
+    font-size: 14px;
+}
+
+.footer-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1.2fr;
+    gap: 40px;
+    margin-bottom: 50px;
+}
+
+/* Brand Section */
+.footer-brand .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.footer-brand .logo i {
+    font-size: 28px;
+    color: #3b82f6;
+}
+
+.footer-brand .logo h3 {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin: 0;
+}
+
+.footer-brand p {
+    color: #94a3b8;
+    line-height: 1.6;
+    margin-bottom: 24px;
+}
+
+/* Social Icons */
+.social-links {
+    display: flex;
+    gap: 12px;
+}
+
+.social-links a {
+    width: 36px;
+    height: 36px;
+    background: rgba(255,255,255,0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    color: #fff;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.social-links a:hover {
+    background: #2563eb;
+    transform: translateY(-3px);
+}
+
+/* Link Columns */
+.footer-column h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 25px;
+    color: #fff;
+    position: relative;
+}
+
+.footer-column h4::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -8px;
+    width: 30px;
+    height: 2px;
+    background: #2563eb;
+}
+
+.footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links li {
+    margin-bottom: 12px;
+}
+
+.footer-links a {
+    color: #94a3b8;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.footer-links a:hover {
+    color: #3b82f6;
+    padding-left: 5px;
+}
+
+/* Newsletter Section */
+.newsletter-box p {
+    color: #94a3b8;
+    margin-bottom: 15px;
+}
+
+.newsletter-form {
+    display: flex;
+    background: rgba(255,255,255,0.05);
+    padding: 4px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.newsletter-form input {
+    background: transparent;
+    border: none;
+    padding: 10px 15px;
+    color: #fff;
+    flex: 1;
+    outline: none;
+}
+
+.newsletter-form button {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.newsletter-form button:hover {
+    background: #1d4ed8;
+}
+
+/* Bottom Bar */
+.footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #64748b;
+    font-size: 13px;
+}
+
+.footer-bottom-links {
+    display: flex;
+    gap: 20px;
+}
+
+.footer-bottom-links a {
+    color: #64748b;
+    text-decoration: none;
+}
+
+.footer-bottom-links a:hover {
+    color: #fff;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .footer-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 576px) {
+    .footer-grid {
+        grid-template-columns: 1fr;
+    }
+    .footer-bottom {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+}
+    </style>
+    <footer class="main-footer">
+    <div class="footer-container">
+        <div class="footer-grid">
             
-            <!-- Logo Section -->
-            <div>
-                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 5px;">
-                    <div style="width: 45px; height: 45px; border: 1px solid #fff; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 22px; background: rgba(255,255,255,0.1);"><i class="fa-solid fa-graduation-cap"></i></div>
-                    <div>
-                        
-                        <h3 style="margin: 0; font-size: 20px; font-weight: 900; letter-spacing: 1px; color: #fff;">COLLEGE HELPDESK</h3>
-                        
-
-                    </div>
+            <div class="footer-brand">
+                <div class="logo">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    <h3>COLLEGE HELPDESK</h3>
+                </div>
+                <p>Empowering students and faculty with seamless support services. Your success is our priority through efficient communication and technical excellence.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
                 </div>
             </div>
 
-            <!-- Contact Info -->
-            <div>
-                <h4 style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600;">Contact Info</h4>
-                <p style="margin: 0 0 10px 0; font-size: 13px; display: flex; align-items: center; line-height: 1.4;">
-                    <span style="margin-right: 8px;">📍</span> Your College Address
-                </p>
-                <p style="margin: 0; font-size: 13px; display: flex; align-items: center;">
-                    <span style="margin-right: 8px;">✉️</span> <a href="mailto:support@college.com" style="color: #fff; text-decoration: none;">support@college.com</a>
-                </p>
+            <div class="footer-column">
+                <h4>Academic</h4>
+                <ul class="footer-links">
+                    <li><a href="#">Academic Departments</a></li>
+                    <li><a href="#">Undergraduate Programs</a></li>
+                    <li><a href="#">Graduate Programs</a></li>
+                    <li><a href="#">Institutes and Centers</a></li>
+                    <li><a href="#">Academic Calendar</a></li>
+                </ul>
             </div>
 
-            <!-- Social Media -->
-            <div>
-                <h4 style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600;">Social Media</h4>
-                <div style="display: flex; gap: 10px;">
-                    
+            <div class="footer-column">
+                <h4>Support</h4>
+                <ul class="footer-links">
+                    <li><a href="create_ticket.php">Create Ticket</a></li>
+                    <li><a href="view_ticket.php">View My Tickets</a></li>
+                    <li><a href="#">Technical Support</a></li>
+                    <li><a href="#">Academic Support</a></li>
+                    <li><a href="contact.php">Contact Us</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column">
+                <h4>Stay Updated</h4>
+                <div class="newsletter-box">
+                    <p>Subscribe to receive the latest college news and support updates.</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Email address" required>
+                        <button type="submit">Join</button>
+                    </form>
+                </div>
+                <div style="margin-top: 25px;">
+                    <p style="margin-bottom: 5px; color: #fff; font-weight: 500;">Contact Direct:</p>
+                    <span style="color: #94a3b8;">📍 Your Campus, Building A</span><br>
+                    <span style="color: #94a3b8;">✉️ support@college.edu</span>
                 </div>
             </div>
 
-            <!-- Newsletter -->
-            <div>
-                <h4 style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600;">Newsletter</h4>
-                <div style="display: flex; gap: 0;">
-                    <input type="email" placeholder="Your Email Address" style="flex: 1; padding: 8px 12px; border: none; border-radius: 4px 0 0 4px; font-size: 12px; background: rgba(255,255,255,0.9); color: #333;" />
-                    <button style="padding: 8px 12px; background: rgba(255,255,255,0.3); border: 1px solid rgba(255,255,255,0.4); color: #fff; cursor: pointer; border-radius: 0 4px 4px 0; font-weight: 600; transition: background 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.5)'" onmouseout="this.style.background='rgba(255,255,255,0.3)'">→</button>
-                </div>
-            </div>
         </div>
 
-        <!-- Main Content: 5 Columns -->
-        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; margin-bottom: 40px;">
-            
-            <!-- Column 1: About -->
-            <div>
-                <h3 style="margin: 0 0 20px 0; font-size: 18px; font-weight: 600; letter-spacing: 0.5px; ">About</h3>
-                <ul style="list-style: none; padding: 0; margin: 0;">
-                    <li style="margin-bottom: 10px;"><a href="about.php" style="color: rgba(255,255,255,0.85); text-decoration: none; font-size: 13px; transition: color 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.85)'">College Overview</a></li>
-                    <li style="margin-bottom: 10px;"><a href="#" style="color: rgba(255,255,255,0.85); text-decoration: none; font-size: 13px; transition: color 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.85)'">Administration</a></li>
-                    <li style="margin-bottom: 10px;"><a href="#" style="color: rgba(255,255,255,0.85); text-decoration: none; font-size: 13px; transition: color 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.85)'">Campus Safety</a></li>
-                    <li style="margin-bottom: 10px;"><a href="#" style="color: rgba(255,255,255,0.85); text-decoration: none; font-size: 13px; transition: color 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.85)'">Office Chancellor</a></li>
-                    <li style="margin-bottom: 10px;"><a href="#" style="color: rgba(255,255,255,0.85); text-decoration: none; font-size: 13px; transition: color 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.85)'">Facility Services</a></li>
-                    <li style="margin-bottom: 10px;"><a href="#" style="color: rgba(255,255,255,0.85); text-decoration: none; font-size: 13px; transition: color 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.85)'">Human Resources</a></li>
-                </ul>
+        <div class="footer-bottom">
+            <p>&copy; <?php echo date("Y"); ?> College Helpdesk. All rights reserved.</p>
+            <div class="footer-bottom-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Cookie Policy</a>
             </div>
-
-            <!-- Column 2: Educations -->
-            <div>
-                <h3 style="margin: 0 0 20px 0; font-size: 18px; font-weight: 600; letter-spacing: 0.5px;">Educations</h3>
-                <ul style="list-style: none; padding: 0; margin: 0;">
-                    <li style="margin-bottom: 10px;"><a href="#" style="color: rgba(255,255,255,0.85); text-decoration: none; font-size: 13px; transition: color 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.85)'">Academic Departments</a></li>
-                    <li style="margin-bottom: 10px;"><a href="#" style="color: rgba(255,255,255,0.85); text-decoration: none; font-size: 13px; transition: color 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.85)'">Undergraduate Programs</a></li>
-                    <li style="margin-bottom: 10px;"><a href="#" style="color: rgba(255,255,255,0.85); text-decoration: none; font-size: 13px; transition: color 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.85)'">Graduate Programs</a></li>
-                    <li style="margin-bottom: 10px;"><a href="#" style="color: rgba(255,255,255,0.85); text-decoration: none; font-size: 13px; transition: color 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.85)'">Institutes and Centers</a></li>
-                    <li style="margin-bottom: 10px;"><a href="#" style="color: rgba(255,255,255,0.85); text-decoration: none; font-size: 13px; transition: color 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.85)'">Academic Policy</a></li>
-                    <li style="margin-bottom: 10px;"><a href="#" style="color: rgba(255,255,255,0.85); text-decoration: none; font-size: 13px; transition: color 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.85)'">Academic Calendar</a></li>
-                </ul>
-            </div>
-
-            <!-- Column 3: Admission -->
-            <div>
-                <h3 style="margin: 0 0 20px 0; font-size: 18px; font-weight: 600; letter-spacing: 0.5px;">Admission</h3>
-                <ul style="list-style: none; padding: 0; margin: 0;">
-                    <li style="margin-bottom: 10px;"><a href="#" style="color: rgba(255,255,255,0.85); text-decoration: none; font-size: 13px; transition: color 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.85)'">Undergraduate Admission</a></li>
-                    <li style="margin-bottom: 10px;"><a href="#" style="color: rgba(255,255,255,0.85); text-decoration: none; font-size: 13px; transition: color 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.85)'">Graduate Admission</a></li>
-                    <li style="margin-bottom: 10px;"><a href="#" style="color: rgba(255,255,255,0.85); text-decoration: none; font-size: 13px; transition: color 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.85)'">International Affairs Office</a></li>
-                    <li style="margin-bottom: 10px;"><a href="#" style="color: rgba(255,255,255,0.85); text-decoration: none; font-size: 13px; transition: color 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.85)'">Special Students</a></li>
-                    <li style="margin-bottom: 10px;"><a href="#" style="color: rgba(255,255,255,0.85); text-decoration: none; font-size: 13px; transition: color 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.85)'">Financial Aid</a></li>
-                    <li style="margin-bottom: 10px;"><a href="#" style="color: rgba(255,255,255,0.85); text-decoration: none; font-size: 13px; transition: color 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.85)'">Prospective Students</a></li>
-                </ul>
-            </div>
-
-            <!-- Column 4: Services -->
-            <div>
-                <h3 style="margin: 0 0 20px 0; font-size: 18px; font-weight: 600; letter-spacing: 0.5px;">Services</h3>
-                <ul style="list-style: none; padding: 0; margin: 0;">
-                    <li style="margin-bottom: 10px;"><a href="create_ticket.php" style="color: rgba(255,255,255,0.85); text-decoration: none; font-size: 13px; transition: color 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.85)'">Create Ticket</a></li>
-                    <li style="margin-bottom: 10px;"><a href="view_ticket.php" style="color: rgba(255,255,255,0.85); text-decoration: none; font-size: 13px; transition: color 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.85)'">View My Tickets</a></li>
-                    <li style="margin-bottom: 10px;"><a href="#" style="color: rgba(255,255,255,0.85); text-decoration: none; font-size: 13px; transition: color 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.85)'">Technical Support</a></li>
-                    <li style="margin-bottom: 10px;"><a href="#" style="color: rgba(255,255,255,0.85); text-decoration: none; font-size: 13px; transition: color 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.85)'">Academic Support</a></li>
-                    <li style="margin-bottom: 10px;"><a href="#" style="color: rgba(255,255,255,0.85); text-decoration: none; font-size: 13px; transition: color 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.85)'">Resource Center</a></li>
-                    <li style="margin-bottom: 10px;"><a href="#" style="color: rgba(255,255,255,0.85); text-decoration: none; font-size: 13px; transition: color 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.85)'">Portal Access</a></li>
-                </ul>
-            </div>
-
-            
-        
+        </div>
     </div>
 </footer>
+
 </body>
 </html>
