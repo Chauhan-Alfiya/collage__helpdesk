@@ -25,28 +25,7 @@ else {
     $stmt->execute([$username]);
     $profile_data = $stmt->fetch();
 
-    if ($profile_data) {
-        $role_name = "Administrator";
-    }
-
-    else if {
-        $stmt = $pdo->prepare("SELECT *, 'COORDINATOR' as role_name FROM users WHERE username = ?");
-        $stmt->execute([$username]);
-        $profile_data = $stmt->fetch();
-
-        if ($profile_data) {
-            $role_name = "Coordinator";
-        }
-    }
-    else if {
-        $stmt = $pdo->prepare("SELECT *, 'HELPDESK STAFF' as role_name FROM users WHERE username = ?");
-        $stmt->execute([$username]);
-        $profile_data = $stmt->fetch();
-
-        if ($profile_data) {
-            $role_name = "Helpdesk Staff";
-        }
-    }
+    
     
 
 }

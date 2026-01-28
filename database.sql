@@ -146,5 +146,4 @@ CREATE TABLE faculty (
 );
 
 
- <section class="py-5 text-white" style="background: linear-gradient(135deg, #0f172a 0%, #1e40af 100%);">
-        <div class="container py-5">
+ 
