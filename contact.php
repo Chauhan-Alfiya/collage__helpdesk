@@ -13,7 +13,7 @@
 </section>
 
 <main class="about-main container">
-    <div class="about-grid">
+    <div class="about-grid">   
         <div class="about-text">
             <h2>Get in Touch</h2>
             <p>If you need assistance with the College Helpdesk platform, have questions about your tickets or roles, or want to provide feedback, our support team is ready to assist you. You can contact us through the following methods:</p>       

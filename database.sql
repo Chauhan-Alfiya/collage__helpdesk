@@ -29,10 +29,17 @@ CREATE TABLE `users` (
   `username` varchar(100) NOT NULL,
   `password` varchar(255) NOT NULL,
   `role_id` int NOT NULL,
-  `email` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,   
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `last_password_change` datetime DEFAULT NULL,
+  `is_active` boolean DEFAULT TRUE,
+  `is_deleted` boolean DEFAULT FALSE,
+  `last_activity_date` datetime DEFAULT NULL,
+  `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `username` (`username`),
-  FOREIGN KEY (`role_id`) REFERENCES `roles`(`role_id`)
+  FOREIGN KEY (`role_id`) REFERENCES `roles`(`role_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  check (LENGTH(is_deleted=='')
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Password for all sample users is 'password123'
@@ -119,7 +126,7 @@ INSERT INTO `j_users` (`username`, `password`, `role_id`, `email`) VALUES
 
 ('student', '$2y$10$FYhRXaElfD9aVBXjzkNn.OvXmBL8lhbzsi/UKlrIVfRAJivad27Vi' ,1, 'Student@college.edu'),
 ('facility', '$2y$10$FYhRXaElfD9aVBXjzkNn.OvXmBL8lhbzsi/UKlrIVfRAJivad27Vi', 2, 'facility@college.edu');
-
+   
 
 
 CREATE TABLE student (
