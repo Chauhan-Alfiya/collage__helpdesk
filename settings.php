@@ -3,31 +3,26 @@ session_start();
 include 'includes/db.php';
 
 if (!isset($_SESSION['username'])) {
-    header("Location: common_login.php");
+    header("Location: login.php");
     exit();
 }
 
 $username = $_SESSION['username'];
-$role = $_SESSION['role']; 
+$role = $_SESSION['role'];
 $msg = "";
 
+$table = $role === 'STUDENT' ? 'student' : ($role === 'FACULTY' ? 'faculty' : 'users');
 
-if ($role == 'STUDENT') {
-    $table = 'student';
-} elseif ($role == 'FACULTY') {
-    $table = 'faculty';
-} else {
-    $table = 'users';
-}
-
+// Update profile
 if (isset($_POST['update_profile'])) {
     $email = $_POST['email'];
     $stmt = $pdo->prepare("UPDATE $table SET email = ? WHERE username = ?");
     if ($stmt->execute([$email, $username])) {
-        $msg = "<div class='alert alert-success'>Profile updated!</div>";
+        $msg = "Profile updated!";
     }
 }
 
+// Change password
 if (isset($_POST['change_password'])) {
     $old_pass = $_POST['old_password'];
     $new_pass = password_hash($_POST['new_password'], PASSWORD_DEFAULT);
@@ -37,42 +32,35 @@ if (isset($_POST['change_password'])) {
     $user = $check->fetch();
 
     if (password_verify($old_pass, $user['password'])) {
-        $update = $pdo->prepare("UPDATE $table SET password = ? WHERE username = ?");
+        $update = $pdo->prepare("UPDATE $table SET password = ?, last_password_change = NOW(), is_active = 1 WHERE username = ?");
         $update->execute([$new_pass, $username]);
-        $msg = "<div class='alert alert-success'>Password changed successfully!</div>";
+        $msg = "Password changed successfully!";
     } else {
-        $msg = "<div class='alert alert-danger'>Current password is incorrect!</div>";
+        $msg = "Current password is incorrect!";
     }
 }
-if (isset($_POST['confirm_delete'])) {
-    $pdo->prepare("DELETE FROM ticket_comments WHERE ticket_id = ?")->execute([$ticket['ticket_id']]);
-    $pdo->prepare("DELETE FROM ticket_attachments WHERE ticket_id = ?")->execute([$ticket['ticket_id']]);
-    
-    $pdo->prepare("DELETE FROM tickets WHERE ticket_id = ?")->execute([$ticket['ticket_id']]);
 
-    header("Location: myticket.php?msg=deleted");
-    exit();
-}
-
+// Soft delete account
 if (isset($_POST['delete_account'])) {
-
-    $pdo->prepare("DELETE FROM student WHERE username = ?")->execute([$username]);
-    $pdo->prepare("DELETE FROM faculty WHERE username = ?")->execute([$username]);
-    $pdo->prepare("DELETE FROM users WHERE username = ?")->execute([$username]);
-    $pdo->prepare("DELETE FROM ticket_comments WHERE ticket_id = ?")->execute([$ticket['ticket_id']]);
-    $pdo->prepare("DELETE FROM ticket_attachments WHERE ticket_id = ?")->execute([$ticket['ticket_id']]);
-    
-    $pdo->prepare("DELETE FROM tickets WHERE ticket_id = ?")->execute([$ticket['ticket_id']]);
+    $pdo->prepare("
+        UPDATE users 
+        SET is_deleted = 1,
+            is_active = 0,
+            deleted_at = NOW()
+        WHERE username = ?
+    ")->execute([$username]);
 
     session_destroy();
-    echo "<script>alert('Account deleted successfully'); window.location='common_login.php';</script>";
+    echo "<script>alert('Your account has been deleted.'); window.location='login.php';</script>";
     exit();
 }
 
-$stmt = $pdo->prepare("SELECT * FROM $table WHERE username = ?");   
+// Fetch user data
+$stmt = $pdo->prepare("SELECT * FROM $table WHERE username = ?");
 $stmt->execute([$username]);
 $data = $stmt->fetch();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

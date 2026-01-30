@@ -24,23 +24,30 @@ INSERT INTO `roles` (`role_name`) VALUES
 
 
 -- 2. Users Table
-CREATE TABLE `users` (
-  `user_id` int NOT NULL AUTO_INCREMENT,
-  `username` varchar(100) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `role_id` int NOT NULL,
-  `email` varchar(100) NOT NULL,   
-  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
-  `last_password_change` datetime DEFAULT NULL,
-  `is_active` boolean DEFAULT TRUE,
-  `is_deleted` boolean DEFAULT FALSE,
-  `last_activity_date` datetime DEFAULT NULL,
-  `deleted_at` datetime DEFAULT NULL,
-  PRIMARY KEY (`user_id`),
-  UNIQUE KEY `username` (`username`),
-  FOREIGN KEY (`role_id`) REFERENCES `roles`(`role_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
-  check (LENGTH(is_deleted=='')
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE users (
+  user_id INT NOT NULL AUTO_INCREMENT,
+  username VARCHAR(100) NOT NULL,
+  email VARCHAR(100) NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  role_id INT NOT NULL,
+  is_active BOOLEAN DEFAULT TRUE,
+  is_deleted BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  last_activity_date DATETIME DEFAULT NULL,
+  last_password_change DATETIME DEFAULT NULL,
+  deleted_at DATETIME DEFAULT NULL,
+  last_password_change DATETIME DEFAULT NULL,
+  reset_token VARCHAR(255) DEFAULT NULL,
+ reset_expires DATETIME DEFAULT NULL,
+  PRIMARY KEY (user_id),
+  UNIQUE KEY (username),
+  UNIQUE KEY (email),
+  FOREIGN KEY (role_id)
+    REFERENCES roles(role_id)
+    ON UPDATE CASCADE
+  
+);
+
 
 -- Password for all sample users is 'password123'
 -- Hash generated via password_hash('password123', PASSWORD_DEFAULT)
@@ -100,33 +107,9 @@ CREATE TABLE `ticket_attachments` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
-CREATE TABLE `j_role` (
-  `role_id` int NOT NULL AUTO_INCREMENT,
-  `role_name` varchar(255) NOT NULL,
-  PRIMARY KEY (`role_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-INSERT INTO `j_role` (`role_name`) VALUES
-( 'STUDENT'),
-( 'FACILITY');
 
 
-CREATE TABLE `j_users` (
-  `user_id` int NOT NULL AUTO_INCREMENT,
-  `username` varchar(100) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `role_id` int NOT NULL,
-  `email` varchar(100) NOT NULL,
-  PRIMARY KEY (`user_id`),
-  UNIQUE KEY `username` (`username`),
-  FOREIGN KEY (`role_id`) REFERENCES `j_role`(`role_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO `j_users` (`username`, `password`, `role_id`, `email`) VALUES
-
-('student', '$2y$10$FYhRXaElfD9aVBXjzkNn.OvXmBL8lhbzsi/UKlrIVfRAJivad27Vi' ,1, 'Student@college.edu'),
-('facility', '$2y$10$FYhRXaElfD9aVBXjzkNn.OvXmBL8lhbzsi/UKlrIVfRAJivad27Vi', 2, 'facility@college.edu');
-   
 
 
 CREATE TABLE student (
