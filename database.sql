@@ -120,6 +120,15 @@ CREATE TABLE student (
     semester INT NOT NULL,
     password VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    is_active BOOLEAN DEFAULT TRUE,
+  is_deleted BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  last_activity_date DATETIME DEFAULT NULL,
+  last_password_change DATETIME DEFAULT NULL,
+  deleted_at DATETIME DEFAULT NULL,
+  last_password_change DATETIME DEFAULT NULL,
+  reset_token VARCHAR(255) DEFAULT NULL,
+ reset_expires DATETIME DEFAULT NULL,
     PRIMARY KEY (id),
     UNIQUE KEY email (email)
 );
@@ -136,4 +145,22 @@ CREATE TABLE faculty (
 );
 
 
- 
+ alter table student
+ add column is_deleted BOOLEAN DEFAULT FALSE,
+  add column last_activity_date DATETIME DEFAULT NULL,
+  add column last_password_change DATETIME DEFAULT NULL,
+  add column deleted_at DATETIME DEFAULT NULL,
+  add column last_password_change DATETIME DEFAULT NULL,
+  add column reset_token VARCHAR(255) DEFAULT NULL,
+  add column reset_expires DATETIME DEFAULT NULL;
+  
+ALTER TABLE faculty
+ add column is_deleted BOOLEAN DEFAULT FALSE,
+  
+    add column last_activity_date DATETIME DEFAULT NULL,
+    add column last_password_change DATETIME DEFAULT NULL,
+    add column deleted_at DATETIME DEFAULT NULL,
+    add column last_password_change DATETIME DEFAULT NULL,
+    add column reset_token VARCHAR(255) DEFAULT NULL,
+    add column reset_expires DATETIME DEFAULT NULL;
+COMMIT;

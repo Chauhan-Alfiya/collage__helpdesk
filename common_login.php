@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error = "No such user exists.";
         }
         elseif (isset($user['is_active']) && $user['is_active'] == 0) {
-            $error = "Your account is inactive.";
+            $error = "Your account is deactivated.";
         }
         elseif (password_verify($password, $user['password'])) {
             session_regenerate_id(true);
@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <p>Please sign in to access your dashboard</p>
         </div>
 
-        <?php if(isset($error)) echo "<div class='alert error'><i class='fa-solid fa-circle-exclamation'></i> $error</div>"; ?>
+        <?php if(isset($error)) echo "<div class='alert error'> $error</div>"; ?>
         
         <form method="POST">
             <div class="form-group">
@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 Sign In <i class="fa-solid fa-arrow-right" style="margin-left: 10px;"></i>
             </button>
              <p style="text-align: center; margin-top: 10px; font-size: 14px;">
-            <a href="#">Forgot Password?</a>
+            <a href="forgot_password.php">Forgot Password?</a>
             </p>
             <p style="text-align: center; margin-top: 10px;">Create New User --> <a href="signup.php" >Sign Up</a></p>
         </form>

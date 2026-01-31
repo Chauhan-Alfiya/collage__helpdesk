@@ -3,7 +3,7 @@ session_start();
 include 'includes/db.php';
 
 if (!isset($_SESSION['username'])) {
-    header("Location: login.php");
+    header("Location: common_login.php");
     exit();
 }
 
@@ -13,7 +13,6 @@ $msg = "";
 
 $table = $role === 'STUDENT' ? 'student' : ($role === 'FACULTY' ? 'faculty' : 'users');
 
-// Update profile
 if (isset($_POST['update_profile'])) {
     $email = $_POST['email'];
     $stmt = $pdo->prepare("UPDATE $table SET email = ? WHERE username = ?");
@@ -22,8 +21,8 @@ if (isset($_POST['update_profile'])) {
     }
 }
 
-// Change password
 if (isset($_POST['change_password'])) {
+    
     $old_pass = $_POST['old_password'];
     $new_pass = password_hash($_POST['new_password'], PASSWORD_DEFAULT);
 
@@ -40,7 +39,6 @@ if (isset($_POST['change_password'])) {
     }
 }
 
-// Soft delete account
 if (isset($_POST['delete_account'])) {
     $pdo->prepare("
         UPDATE users 
@@ -55,7 +53,6 @@ if (isset($_POST['delete_account'])) {
     exit();
 }
 
-// Fetch user data
 $stmt = $pdo->prepare("SELECT * FROM $table WHERE username = ?");
 $stmt->execute([$username]);
 $data = $stmt->fetch();
