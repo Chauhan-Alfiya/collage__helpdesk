@@ -143,6 +143,7 @@ CREATE TABLE faculty (
     PRIMARY KEY (id),
     UNIQUE KEY email (email)
 );
+ 
 
 
  alter table student

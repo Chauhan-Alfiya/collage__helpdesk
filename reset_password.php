@@ -3,67 +3,52 @@ session_start();
 include 'includes/db.php';
 include 'includes/index_header.php';
 
+// Suraksha: Agar bina OTP verify kiye yahan aaye toh wapas bhej do
+if (!isset($_SESSION['otp_verified']) || $_SESSION['otp_verified'] !== true) {
+    header("Location: forgot_password.php");
+    exit();
+}
+
 $msg = "";
-$show_form = false;
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $pass = $_POST['new_pass'];
+    $confirm_pass = $_POST['confirm_pass'];
 
-if (isset($_GET['token'])) {
-    $token = $_GET['token'];
-    $tables = ['users', 'student', 'faculty'];
-    $user = null;
-    $table_found = '';
-
-    // Find user by token
-    foreach ($tables as $table) {
-        $stmt = $pdo->prepare("SELECT * FROM $table WHERE reset_token = ? AND reset_expires >= NOW()");
-        $stmt->execute([$token]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($user) {
-            $table_found = $table;
-            break;
-        }
-    }
-
-    if ($user) {
-        $show_form = true;
-
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $new_password = password_hash($_POST['new_password'], PASSWORD_DEFAULT);
-
-            // Update password & activate account
-            $stmt = $pdo->prepare("
-                UPDATE $table_found 
-                SET password = ?, is_active = 1, is_deleted = 0, last_password_change = NOW(), reset_token = NULL, reset_expires = NULL
-                WHERE username = ?
-            ");
-            $stmt->execute([$new_password, $user['username']]);
-
-            $msg = "<div class='alert alert-success'>Password reset successful! You can now <a href='common_login.php'>login</a>.</div>";
-            $show_form = false;
-        }
-
+    if ($pass !== $confirm_pass) {
+        $msg = "<div class='alert alert-danger'>Passwords do not match!</div>";
     } else {
-        $msg = "<div class='alert alert-danger'>Invalid or expired reset link.</div>";
-    }
+        $hashed_password = password_hash($pass, PASSWORD_DEFAULT);
+        $email = $_SESSION['reset_email'];
+        $table = $_SESSION['reset_table'];
 
-} else {
-    $msg = "<div class='alert alert-danger'>No reset token provided.</div>";
+        // Update Password and Clear Tokens
+        $stmt = $pdo->prepare("UPDATE $table SET password = ?, reset_token = NULL, reset_expires = NULL WHERE email = ?");
+        if ($stmt->execute([$hashed_password, $email])) {
+            // Success! Clear Session and Redirect
+            session_destroy();
+            echo "<script>alert('Password updated successfully! Please login.'); window.location='common_login.php';</script>";
+            exit();
+        } else {
+            $msg = "<div class='alert alert-danger'>Database error. Try again.</div>";
+        }
+    }
 }
 ?>
 
-<div style="min-height: 80vh; display: flex; align-items: center; justify-content: center;">
-    <div class="card" style="width: 100%; max-width: 400px; padding: 2.5rem;">
-        <h2 style="text-align:center;">Reset Password</h2>
+<div style="min-height: 80vh; display: flex; align-items: center; justify-content: center; background: #f4f7f6;">
+    <div class="card" style="width: 400px; padding: 2rem; border-radius: 10px;">
+        <h3 class="text-center mb-4">New Password</h3>
         <?php echo $msg; ?>
-        <?php if ($show_form): ?>
-            <form method="POST">
-                <div class="form-group mb-3">
-                    <label>New Password</label>
-                    <input type="password" name="new_password" class="form-control" required>
-                </div>
-                <button type="submit" class="btn btn-primary w-100">Reset Password</button>
-            </form>
-        <?php endif; ?>
+        <form method="POST">
+            <div class="mb-3">
+                <label class="form-label">New Password</label>
+                <input type="password" name="new_pass" class="form-control" required minlength="6">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Confirm Password</label>
+                <input type="password" name="confirm_pass" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Update Password</button>
+        </form>
     </div>
 </div>
-</body>
-</html>

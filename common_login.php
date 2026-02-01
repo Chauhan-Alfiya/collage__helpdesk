@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <p>Please sign in to access your dashboard</p>
         </div>
 
-        <?php if(isset($error)) echo "<div class='alert error'> $error</div>"; ?>
+        <?php if(isset($error)) echo "<div class='alert alert-danger'>  $error</div>"; ?>
         
         <form method="POST">
             <div class="form-group">
