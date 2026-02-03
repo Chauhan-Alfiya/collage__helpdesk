@@ -107,11 +107,6 @@ CREATE TABLE `ticket_attachments` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
-
-
-
-
-
 CREATE TABLE student (
     id INT NOT NULL AUTO_INCREMENT,
     username VARCHAR(100) NOT NULL,
