@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['verify_otp'])) {
         <div class="text-center mt-3">
             <a href="forgot_password.php" class="text-decoration-none small text-muted">Resend Code</a>
         </div>
-    </form>
+    </form> 
 </div>
 
 <script>
