@@ -3,7 +3,7 @@ session_start();
 if (strpos($_SESSION['role'] ?? '', '_STAFF') === false) header("Location: login.php");
 include 'includes/db.php';
 include 'includes/header.php';
-
+ 
 $user_id = $_SESSION['user_id'];
 $stmt = $pdo->prepare("SELECT * FROM tickets WHERE assigned_user_id = ? AND status = 'IN-PROGRESS'");
 $stmt->execute([$user_id]);
@@ -21,4 +21,4 @@ $tickets = $stmt->fetchAll();
         </tr>
         <?php endforeach; ?>
     </table>
-</div>
+</div>  

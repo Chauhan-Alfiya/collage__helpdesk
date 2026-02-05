@@ -6,7 +6,7 @@ include 'includes/db.php';
 include 'includes/header.php'; 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $username = trim($_POST['username']);
+    $username = trim($_POST['username']);  
     $email = trim($_POST['email']);
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
@@ -23,12 +23,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         } else {
 
-            //last role id
             $roleStmt = $pdo->query("SELECT MAX(role_id) AS last_id FROM roles");
             $lastRole = $roleStmt->fetch();
             $nextRoleId = $lastRole['last_id'] + 1;
 
-            // Insert new role
             $roleName = strtoupper($username) . " "; 
             $stmtRole = $pdo->prepare("INSERT INTO roles (role_id, role_name) VALUES (?, ?)");
             $stmtRole->execute([$nextRoleId, $roleName]);
@@ -37,7 +35,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $hashed_password = password_hash($password, PASSWORD_BCRYPT);
             $stmt = $pdo->prepare("INSERT INTO users (username, email, password, role_id) VALUES (?, ?, ?, ?)");
             $stmt->execute([$username,$email, $hashed_password, $nextRoleId]); // Use the new role_id
-            //header("Location: login.php");
             exit;
         }
     }
