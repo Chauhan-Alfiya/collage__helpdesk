@@ -3,6 +3,7 @@ session_start();
 include 'includes/db.php';
   
 $error = "";
+$success = "";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_otp'])) {
     $email = trim($_POST['email']);
@@ -25,16 +26,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_otp'])) {
         $_SESSION['otp_code'] = $otp_code;
         $_SESSION['reset_email'] = $email;
 
-        $stmt = $pdo->prepare("UPDATE " . $_SESSION['reset_table'] . " SET otp_code = ?, otp_expires = DATE_ADD(NOW(), INTERVAL 1 MINUTE) WHERE email = ?");
+        $stmt = $pdo->prepare("UPDATE " . $_SESSION['reset_table'] . " SET otp_code = ?, otp_expires = DATE_ADD(NOW(), INTERVAL 5 MINUTE) WHERE email = ?");
         $stmt->execute([$otp_code, $email]);
 
-        header("Location: otp.php");
-        exit;
+        $subject = "Your OTP for Password Reset";
+        $message = "Hello,\n\nYour OTP code for password reset is: $otp_code\nIt will expire in 5 minutes.\n\nIf you didn't request this, ignore this email.";
+        $headers = "From: no-reply@yourdomain.com";
+
+        if(mail($email, $subject, $message, $headers)){
+            // Email sent, redirect to OTP page
+            header("Location: otp.php?email=" . urlencode($email));
+            exit;
+        } else {
+            $error = "Failed to send OTP. Check your email configuration.";
+        }
+
     } else {
         $error = "No account found with that email address.";
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

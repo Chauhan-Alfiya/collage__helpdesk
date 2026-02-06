@@ -5,25 +5,40 @@ include 'includes/db.php';
 $msg = "";
 $email = $_GET['email'] ?? ($_POST['email'] ?? '');
 
+// Form submit check
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['verify_otp'])) {
-    $otp = trim($_POST['otp']);
-    $email = trim($_POST['email']);
 
-    // Check if OTP is correct AND not expired (1 minute limit)
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ? AND otp_code = ? AND otp_expires > NOW()");
+    $otp   = trim($_POST['otp']);       // User input OTP
+    $email = trim($_POST['email']);     // Hidden input email
+
+    // SELECT * from users where email, otp match & expiry > now
+    $stmt = $pdo->prepare(
+        "SELECT * FROM users 
+         WHERE email = ? 
+         AND otp_code = ? 
+         AND otp_expires > NOW()"
+    );
     $stmt->execute([$email, $otp]);
-    $user = $stmt->fetch();
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($user) {
-        // Success: Clear the OTP and redirect to actual reset page
-        $pdo->prepare("UPDATE users SET otp_code = NULL WHERE email = ?")->execute([$email]);
-        
-        // Store email in session so the next page knows who is resetting
+        // OTP clear kar do
+        $pdo->prepare(
+            "UPDATE users 
+             SET otp_code = NULL, otp_expires = NULL 
+             WHERE email = ?"
+        )->execute([$email]);
+
+        // Session me email store karo
         $_SESSION['reset_email'] = $email;
+
+        // Redirect to reset password page
         header("Location: reset_password.php");
         exit();
     } else {
-        $msg = "<div class='alert alert-danger text-center'>Invalid or expired OTP.</div>";
+        $msg = "<div class='alert alert-danger text-center'>
+                    Invalid or expired OTP.
+                </div>";
     }
 }
 ?>
@@ -44,50 +59,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['verify_otp'])) {
 
 <div class="otp-box">
     <h2 class="text-center mb-4 text-primary fw-bold">Verify OTP</h2>
-    
+
     <p class="text-center text-muted small">
         Code sent to: <br><strong><?= htmlspecialchars($email); ?></strong>
     </p>
 
     <?= $msg; ?>
 
-    <form method="POST" action="veri_otp.php">
+    <form method="POST">
         <input type="hidden" name="email" value="<?= htmlspecialchars($email); ?>">
-        
+
         <div class="mb-3">
-            <input type="text" name="otp" class="form-control form-control-lg text-center" 
-                   maxlength="6" placeholder="000000" required autofocus>
+            <input type="text"
+                   name="otp"
+                   class="form-control form-control-lg text-center"
+                   maxlength="6"
+                   placeholder="000000"
+                   required
+                   autofocus>
         </div>
-        
+
         <div class="text-center mb-3">
-            <small>OTP expires in: <span id="timer">01:00</span></small>
+            <small>OTP expires in: <span id="timer">1 minute</span></small>
         </div>
 
-        <button type="submit" name="verify_otp" class="btn btn-primary w-100 btn-lg">Verify & Continue</button>
-        
+        <button type="submit"
+                name="verify_otp"
+                class="btn btn-primary w-100 btn-lg">
+            Verify & Continue
+        </button>
+
         <div class="text-center mt-3">
-            <a href="forgot_password.php" class="text-decoration-none small text-muted">Resend Code</a>
+            <a href="forgot_password.php"
+               class="text-decoration-none small text-muted">
+               Resend Code
+            </a>
         </div>
-    </form> 
+    </form>
 </div>
-
-<script>
-    let timeLeft = 60;
-    const timerElement = document.getElementById('timer');
-
-    const countdown = setInterval(() => {
-        if (timeLeft <= 0) {
-            clearInterval(countdown);
-            timerElement.innerHTML = "Expired";
-            document.querySelector('button[name="verify_otp"]').disabled = true;
-        } else {
-            timeLeft--;
-            let minutes = Math.floor(timeLeft / 60);
-            let seconds = timeLeft % 60;
-            timerElement.innerHTML = `0${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-        }
-    }, 1000);
-</script>
 
 </body>
 </html>
