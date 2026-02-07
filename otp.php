@@ -5,13 +5,13 @@ include 'includes/db.php';
 $msg = "";
 $email = $_GET['email'] ?? ($_POST['email'] ?? '');
 
-// Form submit check
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['verify_otp'])) {
 
-    $otp   = trim($_POST['otp']);       // User input OTP
-    $email = trim($_POST['email']);     // Hidden input email
+    $otp   = trim($_POST['otp']);       
+    $email = trim($_POST['email']);     
 
-    // SELECT * from users where email, otp match & expiry > now
+    
+
     $stmt = $pdo->prepare(
         "SELECT * FROM users 
          WHERE email = ? 
@@ -22,17 +22,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['verify_otp'])) {
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($user) {
-        // OTP clear kar do
         $pdo->prepare(
             "UPDATE users 
              SET otp_code = NULL, otp_expires = NULL 
              WHERE email = ?"
         )->execute([$email]);
 
-        // Session me email store karo
         $_SESSION['reset_email'] = $email;
 
-        // Redirect to reset password page
         header("Location: reset_password.php");
         exit();
     } else {
@@ -63,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['verify_otp'])) {
     <p class="text-center text-muted small">
         Code sent to: <br><strong><?= htmlspecialchars($email); ?></strong>
     </p>
-
+ 
     <?= $msg; ?>
 
     <form method="POST">

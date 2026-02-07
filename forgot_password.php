@@ -1,9 +1,14 @@
 <?php
 session_start();
 include 'includes/db.php';
-  
+
+use PHPMailer\PHPMailer\PHPMailer;
+
+require 'phpMailer/PHPMailer.php';
+require 'phpMailer/SMTP.php';
+require 'phpMailer/Exception.php';
+
 $error = "";
-$success = "";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_otp'])) {
     $email = trim($_POST['email']);
@@ -17,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_otp'])) {
         if ($result) {
             $user = $result;
             $_SESSION['reset_table'] = $table;
-            break; 
+            break;
         }
     }
 
@@ -26,19 +31,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_otp'])) {
         $_SESSION['otp_code'] = $otp_code;
         $_SESSION['reset_email'] = $email;
 
-        $stmt = $pdo->prepare("UPDATE " . $_SESSION['reset_table'] . " SET otp_code = ?, otp_expires = DATE_ADD(NOW(), INTERVAL 5 MINUTE) WHERE email = ?");
+        $stmt = $pdo->prepare("
+            UPDATE " . $_SESSION['reset_table'] . " 
+            SET otp_code = ?, otp_expires = DATE_ADD(NOW(), INTERVAL 5 MINUTE) 
+            WHERE email = ?
+        ");
         $stmt->execute([$otp_code, $email]);
 
-        $subject = "Your OTP for Password Reset";
-        $message = "Hello,\n\nYour OTP code for password reset is: $otp_code\nIt will expire in 5 minutes.\n\nIf you didn't request this, ignore this email.";
-        $headers = "From: no-reply@yourdomain.com";
+        $mail = new PHPMailer();
+        $mail->isSMTP();
+        $mail->Host       = 'smtp.gmail.com';
+        $mail->SMTPAuth   = true;
+        $mail->Username   = 'calfiya1@gmail.com';
+        $mail->Password   = 'your_app_password'; 
+        $mail->SMTPSecure = 'tls';
+        $mail->Port       = 587;
 
-        if(mail($email, $subject, $message, $headers)){
-            // Email sent, redirect to OTP page
+        $mail->setFrom('no-reply@yourdomain.com', 'Helpdesk');
+        $mail->addAddress($email);
+
+        $mail->isHTML(true);
+        $mail->Subject = 'Your OTP for Password Reset';
+        $mail->Body = "
+            <h3>Hello,</h3>
+            <p>Your OTP code is: <b>$otp_code</b></p>
+            <p>This code expires in 5 minutes.</p>
+        ";
+
+        if ($mail->send()) {
             header("Location: otp.php?email=" . urlencode($email));
-            exit;
+            exit();
         } else {
-            $error = "Failed to send OTP. Check your email configuration.";
+            $error = "Failed to send OTP. Please check email configuration.";
         }
 
     } else {
@@ -46,7 +70,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_otp'])) {
     }
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -67,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_otp'])) {
                 
                 <div class="card-header bg-primary text-white text-center py-4 border-0 rounded-top-4">
                     <i class="bi bi-shield-lock-fill display-4"></i>
-                    <h3 class="fw-bold mt-2 mb-0">Forgot Password</h3>
+                    <h3 clas s="fw-bold mt-2 mb-0">Forgot Password</h3>
                     <p class="small mb-0 text-white-50">Enter email to receive OTP</p>
                 </div>
 
