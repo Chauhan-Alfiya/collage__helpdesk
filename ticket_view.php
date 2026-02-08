@@ -30,15 +30,15 @@ if (isset($_POST['save_changes'])) {
     exit();
 }
 
-if (isset($_POST['confirm_delete'])) {
-    $pdo->prepare("DELETE FROM ticket_comments WHERE ticket_id = ?")->execute([$ticket['ticket_id']]);
-    $pdo->prepare("DELETE FROM ticket_attachments WHERE ticket_id = ?")->execute([$ticket['ticket_id']]);
+// if (isset($_POST['confirm_delete'])) {
+//     $pdo->prepare("DELETE FROM ticket_comments WHERE ticket_id = ?")->execute([$ticket['ticket_id']]);
+//     $pdo->prepare("DELETE FROM ticket_attachments WHERE ticket_id = ?")->execute([$ticket['ticket_id']]);
     
-    $pdo->prepare("DELETE FROM tickets WHERE ticket_id = ?")->execute([$ticket['ticket_id']]);
+//     $pdo->prepare("DELETE FROM tickets WHERE ticket_id = ?")->execute([$ticket['ticket_id']]);
 
-    header("Location: myticket.php?msg=deleted");
-    exit();
-}
+//     header("Location: myticket.php?msg=deleted");
+//     exit();
+// }
 
 include 'includes/header.php';
 ?>
@@ -55,11 +55,11 @@ include 'includes/header.php';
         
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
             <h2 style="margin:0;">Manage Ticket #<?= $ticket['ticket_number'] ?></h2>
-            <form method="POST" onsubmit="return confirm('Kya aap sach mein ye ticket DELETE karna chahte hain? Ye wapas nahi aayegi!');">
+            <!-- <form method="POST" onsubmit="return confirm('Are you sure you want to delete this ticket? This action cannot be undone.');">
                 <button type="submit" name="confirm_delete" style="background: #fee2e2; color: #b91c1c; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: 600;">
                     <i class="fas fa-trash"></i> Delete Ticket
                 </button>
-            </form>
+            </form> -->
         </div>
 
         <hr style="border: 0; border-top: 1px solid #eee; margin-bottom: 25px;">

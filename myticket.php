@@ -23,6 +23,15 @@ if (!$user) {
     $stmt->execute([$logged_username]);
     $user = $stmt->fetch();
 }
+if (isset($_SESSION['role']) && strpos($_SESSION['role'], '_STAFF') !== false) {
+    header("Location: staff_dashboard.php");
+    exit();
+}
+if (isset($_SESSION['role']) && strpos($_SESSION['role'], '_COORD') !== false) {
+    header("Location: coordinator_dashboard.php");
+    exit();
+}
+
 
 
 if ($user) {

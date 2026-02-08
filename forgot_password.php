@@ -14,10 +14,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_otp'])) {
     $email = trim($_POST['email']);
     $user = null;
 
-    $tables = ['users', 'student', 'faculty'];
+    $tables = ['users', 'student', 'faculty']; 
     foreach ($tables as $table) {
         $stmt = $pdo->prepare("SELECT * FROM $table WHERE email = ?");
-        $stmt->execute([$email]);
+        $stmt->execute([$email]); 
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($result) {
             $user = $result;

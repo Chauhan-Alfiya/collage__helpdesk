@@ -5,7 +5,7 @@ session_start();
 include 'includes/db.php';
 include 'includes/header.php'; 
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {      
     $username = trim($_POST['username']);  
     $email = trim($_POST['email']);
     $password = $_POST['password'];
@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } 
     else {
 
-        $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
+        $stmt = $pdo->prepare("SELECT * FROM users  WHERE username = ?");
         $stmt->execute([$username]);
         if ($stmt->fetch()) {
             $error = "Username already taken.";
