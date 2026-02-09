@@ -89,3 +89,18 @@ include 'includes/header.php';
 </div>
 
 <?php include 'includes/footer.php'; ?>
+
+Go to Zoho Mail
+ → Sign Up → Business Email → Use your own domain
+
+Enter domain: helpdeskclg.infinityfreeapp.com
+
+Set Email ID: helpdesk@helpdeskclg.infinityfreeapp.com → Display Name: OK Helpdesk Team
+
+Set Email ID: support@helpdeskclg.infinityfreeapp.com → Display Name: Support Team
+
+Zoho will give MX / TXT / CNAME records
+
+Login InfinityFree → Domain Settings / DNS → Copy Paste Zoho Records
+
+Verify domain in Zoho → Done ✅
