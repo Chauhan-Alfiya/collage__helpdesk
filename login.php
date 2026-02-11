@@ -15,10 +15,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $_SESSION['user_id'] = $user['user_id'];
         $_SESSION['username'] = $user['username'];
         $_SESSION['role'] = $user['role_name'];
+$_SESSION['user_id'] = $user['user_id'];
+$_SESSION['username'] = $user['username'];
+$_SESSION['role'] = $user['role_name'];
 
-        if ($user['role_name'] == 'ADMIN') header("Location: admin_dashboard.php");
-        elseif (strpos($user['role_name'], '_CORD') !== false) header("Location: cord_dashboard.php");
-        elseif (strpos($user['role_name'], '_STAFF') !== false) header("Location: staff_dashboard.php");
+header("Location: home.php");
+exit();
+
         
         exit;
     } 

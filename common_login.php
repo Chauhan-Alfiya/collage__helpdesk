@@ -1,7 +1,7 @@
 <?php
 session_start();
 include 'includes/db.php';
-include 'includes/index_header.php';
+include 'includes/index_header.php'; 
 
 $error = "";
 
@@ -21,41 +21,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ");
     $stmt->execute([$username]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if ($user) {
-        $table_found = 'users';
-    }
+    if ($user) $table_found = 'users';
 
     if (!$user) {
         $stmt = $pdo->prepare("SELECT * FROM student WHERE username = ?");
         $stmt->execute([$username]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($user) {
-            $table_found = 'student';
-        }
+        if ($user) $table_found = 'student';
     }
 
     if (!$user) {
         $stmt = $pdo->prepare("SELECT * FROM faculty WHERE username = ?");
         $stmt->execute([$username]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($user) {
-            $table_found = 'faculty';
-        }
+        if ($user) $table_found = 'faculty';
     }
 
     if ($user) {
 
         if (isset($user['is_deleted']) && $user['is_deleted'] == 1) {
             $error = "No such user exists.";
-        }
-        elseif (isset($user['is_active']) && $user['is_active'] == 0) {
+        } elseif (isset($user['is_active']) && $user['is_active'] == 0) {
             $error = "Your account is deactivated.";
-        }
-        elseif (password_verify($password, $user['password'])) {
+        } elseif (password_verify($password, $user['password'])) {
 
             session_regenerate_id(true);
-
             $_SESSION['user_id']  = $user['user_id'] ?? $user['id'];
             $_SESSION['username'] = $user['username'];
 
@@ -67,28 +57,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['role'] = 'FACULTY';
             }
 
-            $role = $_SESSION['role'];
-
-            if ($role === 'ADMIN') {
-                header("Location: admin_dashboard.php");
-            }
-            elseif (stripos($role, '_CORD') !== false) {
-                header("Location: cord_dashboard.php");
-            }
-            elseif (stripos($role, '_STAFF') !== false) {
-                header("Location: staff_dashboard.php");
-            }
-            elseif ($role === 'STUDENT' || $role === 'FACULTY') {
-                header("Location: home.php");
-            }
-            else {
-                header("Location: home.php");
-            }
+            header("Location: home.php");
             exit;
 
         } else {
             $error = "Invalid username or password.";
         }
+
     } else {
         $error = "Invalid username or password.";
     }

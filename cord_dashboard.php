@@ -5,23 +5,45 @@ include 'includes/db.php';
 include 'includes/header.php';
 
 $user_id = $_SESSION['user_id'];
-// Show tickets assigned to this coordinator
+
 $stmt = $pdo->prepare("SELECT * FROM tickets WHERE assigned_user_id = ? ORDER BY field(status, 'OPEN', 'RESOLVED', 'IN-PROGRESS', 'CLOSED')");
 $stmt->execute([$user_id]);
 $tickets = $stmt->fetchAll();
 ?>
-<div class="container">
-    <h2>Coordinator Dashboard (<?= $_SESSION['role'] ?>)</h2>
-    <p>You are seeing tickets assigned to you.</p>
-    <table>
-        <tr><th>ID</th><th>Title</th><th>Status</th><th>Action</th></tr>
+
+<div class ="ticket-container">
+    <div class="main-card">
+        <div class="card-header">
+            <div>
+                <h2>Coordinator Dashboard (<?= $_SESSION['role'] ?>)</h2>
+                <p>You are seeing tickets assigned to you.</p>
+            </div>
+            <a href="all_tickets.php" class="btn-new-ticket"><i class="fas fa-list"></i> All Tickets</a>
+        </div>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Status</th>
+            <th>Date Assigned</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
         <?php foreach($tickets as $t): ?>
         <tr>
             <td><?= $t['ticket_number'] ?></td>
             <td><?= $t['title'] ?></td>
             <td class="status-<?= $t['status'] ?>"><?= $t['status'] ?></td>
+            <td><?= date('d M Y', strtotime($t['created_at'])) ?></td>
             <td><a href="ticket_details.php?id=<?= $t['ticket_id'] ?>" class="btn">Manage</a></td>
         </tr>
         <?php endforeach; ?>
-    </table>
+    </tbody>
+</table>
 </div>
+</div>
+        </div>
