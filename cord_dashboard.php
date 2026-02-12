@@ -30,18 +30,30 @@ $tickets = $stmt->fetchAll();
             <th>Status</th>
             <th>Date Assigned</th>
             <th>Action</th>
-        </tr>
-    </thead>
+        </tr> 
+    </thead>  
     <tbody>
+    <?php if (!empty($tickets)): ?>
         <?php foreach($tickets as $t): ?>
         <tr>
             <td><?= $t['ticket_number'] ?></td>
             <td><?= $t['title'] ?></td>
-            <td class="status-<?= $t['status'] ?>"><?= $t['status'] ?></td>
+            <td>
+                <span class="status-badge status-<?= strtolower(str_replace(' ', '-', $t['status'])) ?>">
+                    <?= $t['status'] ?>
+                </span>
+            </td>
             <td><?= date('d M Y', strtotime($t['created_at'])) ?></td>
             <td><a href="ticket_details.php?id=<?= $t['ticket_id'] ?>" class="btn">Manage</a></td>
         </tr>
         <?php endforeach; ?>
+        <?php else: ?>
+                <tr>                    
+                    <td colspan="6" style="text-a lign:center; padding:30px;">
+                        No assigned tasks found.
+                    </td>
+                </tr>
+            <?php endif; ?>
     </tbody>
 </table>
 </div>

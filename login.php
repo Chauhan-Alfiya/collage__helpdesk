@@ -1,35 +1,53 @@
 <?php
 session_start();
 include 'includes/db.php';
-include 'includes/header.php'; 
+include 'includes/index_header.php'; 
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $username = $_POST['username'];
+$error = "";
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    $username = trim($_POST['username']);
     $password = $_POST['password'];
 
-    $stmt = $pdo->prepare("SELECT u.*, r.role_name FROM users u JOIN roles r ON u.role_id = r.role_id WHERE username = ?");
+    $stmt = $pdo->prepare("
+        SELECT u.*, r.role_name
+        FROM users u
+        JOIN roles r ON u.role_id = r.role_id
+        WHERE u.username = ?
+    ");
     $stmt->execute([$username]);
-    $user = $stmt->fetch(); 
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($user && password_verify($password, $user['password'])) {
-        $_SESSION['user_id'] = $user['user_id'];
-        $_SESSION['username'] = $user['username'];
-        $_SESSION['role'] = $user['role_name'];
-$_SESSION['user_id'] = $user['user_id'];
-$_SESSION['username'] = $user['username'];
-$_SESSION['role'] = $user['role_name'];
+    if ($user) {
 
-header("Location: home.php");
-exit();
+        if (isset($user['is_deleted']) && $user['is_deleted'] == 1) {
+            $error = "No such user exists.";
 
-        
-        exit;
-    } 
-    else {
+        } elseif (isset($user['is_active']) && $user['is_active'] == 0) {
+            $error = "Your account is deactivated.";
+
+        } elseif (password_verify($password, $user['password'])) {
+
+            session_regenerate_id(true);
+
+            $_SESSION['user_id']  = $user['user_id'];
+            $_SESSION['username'] = $user['username'];
+            $_SESSION['role']     = $user['role_name']; 
+
+            header("Location: home.php");
+            exit;
+
+        } else {
+            $error = "Invalid username or password.";
+        }
+
+    } else {
         $error = "Invalid username or password.";
     }
 }
 ?>
+
 
 <div style="min-height: 80vh; display: flex; align-items: center; justify-content: center;">
     <div class="card" style="width: 100%; max-width: 400px; padding: 2.5rem;">
@@ -60,10 +78,3 @@ exit();
         </form>
     </div>
 </div>
-</body>
-</html>
-
- <!-- <p class="extra">
-                <a href="#">Forgot Password?</a><br>
-                Don’t have an account? <a href="#">Sign up</a>
-            </p>  -->

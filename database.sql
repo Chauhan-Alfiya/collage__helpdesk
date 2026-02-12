@@ -2,67 +2,58 @@ SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
 
--- 1. Roles Table
-CREATE TABLE `roles` (
-  `role_id` int NOT NULL AUTO_INCREMENT,
-  `role_name` varchar(50) NOT NULL,
-  PRIMARY KEY (`role_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO `roles` (`role_name`) VALUES
-( 'ADMIN'),
-( 'MCA_CORD'), 
-( 'MCA_STAFF'),
-( 'BBA_CORD'), 
-( 'BBA_STAFF'),
-( 'ADMINI_CORD'), 
-( 'ADMINI_STAFF'),
-( 'TECH_CORD'), 
-( 'TECH_STAFF'),
-( 'FACILITY_CORD'), 
-( 'FACILITY_STAFF');
+CREATE TABLE roles (
+  role_id INT NOT NULL AUTO_INCREMENT,
+  role VARCHAR(50) NOT NULL UNIQUE,
+  PRIMARY KEY (role_id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO roles (role) VALUES
+('ADMIN'),
+('CORD'),
+('STAFF'),
+('STUDENT'),
+('FACULTY');
 
 
--- 2. Users Table
 CREATE TABLE users (
   user_id INT NOT NULL AUTO_INCREMENT,
-  username VARCHAR(100) NOT NULL,
-  email VARCHAR(100) NOT NULL,
+  username VARCHAR(100) NOT NULL UNIQUE,
+  email VARCHAR(150) NOT NULL UNIQUE,
   password VARCHAR(255) NOT NULL,
   role_id INT NOT NULL,
+  role VARCHAR(50) NOT NULL,
   is_active BOOLEAN DEFAULT TRUE,
   is_deleted BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   last_activity_date DATETIME DEFAULT NULL,
   last_password_change DATETIME DEFAULT NULL,
   deleted_at DATETIME DEFAULT NULL,
-  last_password_change DATETIME DEFAULT NULL,
   reset_token VARCHAR(255) DEFAULT NULL,
- reset_expires DATETIME DEFAULT NULL,
+  reset_expires DATETIME DEFAULT NULL,
   PRIMARY KEY (user_id),
-  UNIQUE KEY (username),
-  UNIQUE KEY (email),
-  FOREIGN KEY (role_id)
-    REFERENCES roles(role_id)
-    ON UPDATE CASCADE
-  
+  FOREIGN KEY (role_id) REFERENCES roles(role_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+INSERT INTO users (username, email, password, role, role_id)
+VALUES (
+    'Admin',
+    'Admin@helpdesk.com',
+    '$2y$10$FYhRXaElfD9aVBXjzkNn.OvXmBL8lhbzsi/UKlrIVfRAJivad27Vi',
+    'ADMIN',
+    (SELECT role_id FROM roles WHERE role = 'ADMIN')
 );
 
 
--- Password for all sample users is 'password123'
--- Hash generated via password_hash('password123', PASSWORD_DEFAULT)
-INSERT INTO `users` (`username`, `password`, `role_id`, `email`) VALUES
-('admin', '$2y$10$FYhRXaElfD9aVBXjzkNn.OvXmBL8lhbzsi/UKlrIVfRAJivad27Vi', 1, 'admin@college.edu'),
-('mca_cord', '$2y$10$FYhRXaElfD9aVBXjzkNn.OvXmBL8lhbzsi/UKlrIVfRAJivad27Vi', 2, 'mca_head@college.edu'),
-('mca_staff', '$2y$10$FYhRXaElfD9aVBXjzkNn.OvXmBL8lhbzsi/UKlrIVfRAJivad27Vi', 3, 'mca_staff@college.edu'),
-('bba_cord', '$2y$10$FYhRXaElfD9aVBXjzkNn.OvXmBL8lhbzsi/UKlrIVfRAJivad27Vi', 4, 'bba_head@college.edu'),
-('bba_staff', '$2y$10$FYhRXaElfD9aVBXjzkNn.OvXmBL8lhbzsi/UKlrIVfRAJivad27Vi', 5, 'bba_staff@college.edu'),
-('admin_cord', '$2y$10$FYhRXaElfD9aVBXjzkNn.OvXmBL8lhbzsi/UKlrIVfRAJivad27Vi', 6, 'admin_head@college.edu'),
-('admin_staff', '$2y$10$FYhRXaElfD9aVBXjzkNn.OvXmBL8lhbzsi/UKlrIVfRAJivad27Vi', 7, 'admin_staff@college.edu'),
-('tech_cord', '$2y$10$FYhRXaElfD9aVBXjzkNn.OvXmBL8lhbzsi/UKlrIVfRAJivad27Vi', 8, 'tech_head@college.edu'),
-('tech_staff', '$2y$10$FYhRXaElfD9aVBXjzkNn.OvXmBL8lhbzsi/UKlrIVfRAJivad27Vi', 9, 'tech_staff@college.edu'),
-('facility_cord', '$2y$10$FYhRXaElfD9aVBXjzkNn.OvXmBL8lhbzsi/UKlrIVfRAJivad27Vi', 10, 'facility_head@college.edu'),
-('facility_staff', '$2y$10$FYhRXaElfD9aVBXjzkNn.OvXmBL8lhbzsi/UKlrIVfRAJivad27Vi', 11, 'facility_staff@college.edu');
+CREATE TABLE student_details (
+  user_id INT NOT NULL,
+  semester INT NOT NULL,
+  PRIMARY KEY (user_id),
+  FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
 
 -- 3. Tickets Table
 CREATE TABLE `tickets` (
@@ -107,56 +98,3 @@ CREATE TABLE `ticket_attachments` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
-CREATE TABLE student (
-    id INT NOT NULL AUTO_INCREMENT,
-    username VARCHAR(100) NOT NULL,
-    email VARCHAR(150) NOT NULL,
-    stream VARCHAR(100) NOT NULL,
-    semester INT NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    is_active BOOLEAN DEFAULT TRUE,
-  is_deleted BOOLEAN DEFAULT FALSE,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  last_activity_date DATETIME DEFAULT NULL,
-  last_password_change DATETIME DEFAULT NULL,
-  deleted_at DATETIME DEFAULT NULL,
-  last_password_change DATETIME DEFAULT NULL,
-  reset_token VARCHAR(255) DEFAULT NULL,
- reset_expires DATETIME DEFAULT NULL,
-    PRIMARY KEY (id),
-    UNIQUE KEY email (email)
-);
-
-CREATE TABLE faculty (
-    id INT NOT NULL AUTO_INCREMENT,
-    username VARCHAR(100) NOT NULL,
-    email VARCHAR(150) NOT NULL ,
-    department VARCHAR(100) NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (id),
-    UNIQUE KEY email (email)
-);
- 
-
-
- alter table student
- add column is_deleted BOOLEAN DEFAULT FALSE,
-  add column last_activity_date DATETIME DEFAULT NULL,
-  add column last_password_change DATETIME DEFAULT NULL,
-  add column deleted_at DATETIME DEFAULT NULL,
-  add column last_password_change DATETIME DEFAULT NULL,
-  add column reset_token VARCHAR(255) DEFAULT NULL,
-  add column reset_expires DATETIME DEFAULT NULL;
-  
-ALTER TABLE faculty
- add column is_deleted BOOLEAN DEFAULT FALSE,
-  
-    add column last_activity_date DATETIME DEFAULT NULL,
-    add column last_password_change DATETIME DEFAULT NULL,
-    add column deleted_at DATETIME DEFAULT NULL,
-    add column last_password_change DATETIME DEFAULT NULL,
-    add column reset_token VARCHAR(255) DEFAULT NULL,
-    add column reset_expires DATETIME DEFAULT NULL;
-COMMIT;
