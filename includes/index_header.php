@@ -9,8 +9,8 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<nav class="navbar">
-    <div class="brand">
+<nav class="navbar" style="display: flex; justify-content: space-between; align-items: center; padding: 15px 40px; background: #fff; border-bottom: 1px solid #eee;">
+    <div class="brand" style="font-weight: bold; font-size: 1.2rem;">
         <i class="fa-solid fa-graduation-cap"></i> College Helpdesk
     </div>
     <div>

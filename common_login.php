@@ -1,7 +1,7 @@
 <?php
 session_start();
 include 'includes/db.php';
-include 'includes/index_header.php'; 
+include 'includes/header.php'; 
 
 $error = "";
 
@@ -41,8 +41,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-
-
+<div class ="navbar" >
+    <a href="index.php"><i class="fa-solid fa-arrow-left"></i></a>
+</div>
 <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center;">
     <div class="card" style="width: 100%; max-width: 400px; padding: 2.5rem;">
         <div style="text-align: center; margin-bottom: 2rem;">

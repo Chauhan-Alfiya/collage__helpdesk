@@ -36,6 +36,9 @@ CREATE TABLE users (
   FOREIGN KEY (role_id) REFERENCES roles(role_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+ALTER TABLE users
+ADD COLUMN department VARCHAR(100) NOT NULL AFTER role;
+
 
 INSERT INTO users (username, email, password, role, role_id)
 VALUES (
@@ -45,7 +48,6 @@ VALUES (
     'ADMIN',
     (SELECT role_id FROM roles WHERE role = 'ADMIN')
 );
-
 
 CREATE TABLE student_details (
   user_id INT NOT NULL,
@@ -76,7 +78,7 @@ CREATE TABLE `tickets` (
 
 
 -- 4. Ticket Comments Table
-CREATE TABLE `ticket_comments` (
+CREATEa TABLE `ticket_comments` (
   `comment_id` int NOT NULL AUTO_INCREMENT,
   `ticket_id` int NOT NULL,
   `user_id` int DEFAULT NULL, -- NULL if system generated or public

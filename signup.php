@@ -1,89 +1,81 @@
-  <?php
+<?php
 session_start();
 include 'includes/db.php';
-include 'includes/index_header.php';
+include 'includes/header.php';                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
 include 'includes/send_mail.php';
-
-
 
 $error = '';
 $role = $_POST['role'] ?? '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
-    $username = $_POST['username'] ?? '';
-    $email    = $_POST['email'] ?? '';
-    $password = $_POST['password']  ?? '';
-    $confirm  = $_POST['confirm_password'] ?? '';   
+
+    $username = trim($_POST['username'] ?? '');
+    $email    = trim($_POST['email'] ?? '');
+    $password = $_POST['password'] ?? '';
+    $confirm  = $_POST['confirm_password'] ?? '';
     $role     = $_POST['role'] ?? '';
 
     if (empty($username) || empty($email) || empty($password) || empty($confirm) || empty($role)) {
         $error = "All fields are required.";
-    } 
+    }
     elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = "Invalid email format.";
-    } 
+    }
     elseif ($password !== $confirm) {
-            $error = "Passwords do not match.";
+        $error = "Passwords do not match.";
     }
     elseif (strlen($password) < 8) {
         $error = "Password must be at least 8 characters long.";
     }
     else {
-            $hashed_password = password_hash($password, PASSWORD_BCRYPT);
-        if ($role === 'STUDENT') {
-            $stream   = $_POST['stream'] ?? '';
-            $semester = $_POST['semester'] ?? '';
 
-            if (empty($semester) || empty($stream)) {
-                $error = "Semester and stream are required.";
-            } 
-            else {      
-            $stmt = $pdo->prepare("SELECT id FROM student WHERE email = ?");
-            $stmt->execute([$email]);
-            }
-            if ($stmt->rowCount() > 0) {
-                $error = "Student already exists.";
+        $check = $pdo->prepare("SELECT user_id FROM users WHERE email = ?");
+        $check->execute([$email]);
+
+        if ($check->rowCount() > 0) {
+            $error = "User already exists with this email.";
+        } else {
+
+            $roleStmt = $pdo->prepare("SELECT role_id FROM roles WHERE role = ?");
+            $roleStmt->execute([$role]);
+            $roleData = $roleStmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$roleData) {
+                $error = "Invalid role selected.";
             } else {
-                $stmt = $pdo->prepare(
-                    "INSERT INTO student (username, email, stream, semester, password)
-                     VALUES (?, ?, ?, ?, ?)"
-                );
-                $stmt->execute([$username, $email, $stream, $semester, $hashed_password]);
+
+                $hashed_password = password_hash($password, PASSWORD_BCRYPT);
+                $role_id = $roleData['role_id'];
+
+                $insert = $pdo->prepare("
+                    INSERT INTO users (username, email, password, role_id, role)
+                    VALUES (?, ?, ?, ?, ?)
+                ");
+
+                $insert->execute([
+                    $username,
+                    $email,
+                    $hashed_password,
+                    $role_id,
+                    $role
+                ]);
 
                 sendRegisterSuccessMail($email, $username);
+
                 header("Location: common_login.php");
                 exit();
             }
-        } elseif ($role === 'FACULTY') {
-            $department = $_POST['department'] ?? '';
-            if (empty($department)) {
-                $error = "Department is required.";
-            } else {
-            $stmt = $pdo->prepare("SELECT id FROM faculty WHERE email = ?");
-            $stmt->execute([$email]);
-            }
-            if ($stmt->rowCount() > 0) {
-                $error = "Faculty already exists.";
-            } else {
-                $stmt = $pdo->prepare(
-                    "INSERT INTO faculty (username, email, department, password)
-                     VALUES (?, ?, ?, ?)"
-                );
-                $stmt->execute([$username, $email, $department, $hashed_password]);
-                sendRegisterSuccessMail($email, $username);
-                header("Location: common_login.php");
-                exit();
-            }
-        } 
-        else {
-            $error = "Invalid role selected.";
         }
     }
 }
 ?>
+<div style="font-weight:bold; font-size:1.5rem; color:var(--primary); display:inline-flex; align-items:flex-end; gap:0.5rem; transform:translate(10px,5px);"><i class="fa-solid fa-graduation-cap"></i> College Helpdesk</div>
+
+
+
 <div style="min-height: 140vh; display: flex; align-items: center; justify-content: center;">
     <div class="card" style="width: 120%; max-width: 440px; padding: 2.5rem;">
-        <div style="text-align: center; margin-bottom: rem;">
+        <div style="text-align: center; margin-bottom: 1rem;">
             <i class="fa-solid fa-user-plus" style="font-size: 3rem; color: var(--primary);"></i>
             <h2 style="border: none; margin-top: 1rem;">Register</h2>
             <p>Create a new account</p>
