@@ -66,10 +66,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
                 exit();
             }
         }
-    }
+    } 
+    
 }
 ?>
-<div style="font-weight:bold; font-size:1.5rem; color:var(--primary); display:inline-flex; align-items:flex-end; gap:0.5rem; transform:translate(10px,5px);"><i class="fa-solid fa-graduation-cap"></i> College Helpdesk</div>
+<div style="font-weight:bold; font-size:1.5rem; color:var(--primary); align-items:flex-end; gap:0.5rem; transform:translate(50px,6px);">
+    <i class="fa-solid fa-graduation-cap" ></i> College Helpdesk
+</div> 
 
 
 

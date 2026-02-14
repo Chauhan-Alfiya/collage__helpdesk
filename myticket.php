@@ -1,7 +1,7 @@
 <?php
 session_start();
-include 'includes/db.php';
-include 'includes/functions.php';
+require_once 'includes/db.php';
+require_once 'includes/functions.php';
 
 if (!isset($_SESSION['username'])) {
     header("Location: common_login.php");
@@ -10,18 +10,18 @@ if (!isset($_SESSION['username'])) {
 
 $role = $_SESSION['role'] ?? '';
 
-if (stripos($role, '_STAFF') !== false) {
+if ($role === 'ADMIN') {
+    header("Location: admin_dashboard.php");
+    exit();
+}
+
+if ($role === 'STAFF') {
     header("Location: staff_dashboard.php");
     exit();
 }
 
-if (stripos($role, '_CORD') !== false) {
+if ($role === 'CORD') {
     header("Location: cord_dashboard.php");
-    exit();
-}
-
-if ($role === 'ADMIN') {
-    header("Location: admin_dashboard.php");
     exit();
 }
 
@@ -29,21 +29,22 @@ $username = $_SESSION['username'];
 $tickets = [];
 $found_email = "";
 
-$stmt = $pdo->prepare("SELECT email FROM student WHERE username = ? AND is_deleted = 0");
+$stmt = $pdo->prepare("
+    SELECT email 
+    FROM users 
+    WHERE username = ? 
+    AND is_deleted = 0 
+    AND is_active = 1
+");
 $stmt->execute([$username]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-if (!$user) {
-    $stmt = $pdo->prepare("SELECT email FROM faculty WHERE username = ? AND is_deleted = 0");
-    $stmt->execute([$username]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
-}
 
 if ($user) {
     $found_email = $user['email'];
 
     $stmt = $pdo->prepare("
-        SELECT * FROM tickets
+        SELECT * 
+        FROM tickets
         WHERE requester_email = ?
         ORDER BY created_at DESC
     ");
@@ -70,7 +71,7 @@ include 'includes/header.php';
 
         <?php if (!$found_email): ?>
             <div class="alert alert-danger" style="margin:20px;">
-                Email not found. Please update your profile.
+                Email not found. Please contact admin.
             </div>
         <?php endif; ?>
 
@@ -87,25 +88,40 @@ include 'includes/header.php';
             </thead>
 
             <tbody>
+
             <?php if (!empty($tickets)): ?>
                 <?php foreach ($tickets as $t): ?>
                     <tr>
-                        <td style="font-weight:600;">#<?= $t['ticket_number'] ?></td>
-                        <td><?= htmlspecialchars($t['title']) ?></td>
-                        <td><?= $t['category'] ?></td>
+                        <td style="font-weight:600;">
+                            #<?= htmlspecialchars($t['ticket_number']) ?>
+                        </td>
+
+                        <td>
+                            <?= htmlspecialchars($t['title']) ?>
+                        </td>
+
+                        <td>
+                            <?= htmlspecialchars($t['category']) ?>
+                        </td>
+
                         <td>
                             <span class="status-badge status-<?= strtolower($t['status']) ?>">
-                                <?= $t['status'] ?>
+                                <?= htmlspecialchars($t['status']) ?>
                             </span>
                         </td>
-                        <td><?= date('d M Y', strtotime($t['created_at'])) ?></td>
+
                         <td>
-                            <a href="ticket_view.php?ticket=<?= $t['ticket_number'] ?>" class="btn-view">
+                            <?= date('d M Y', strtotime($t['created_at'])) ?>
+                        </td>
+
+                        <td>
+                            <a href="ticket_view.php?ticket=<?= urlencode($t['ticket_number']) ?>" class="btn-view">
                                 View
                             </a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
+
             <?php else: ?>
                 <tr>
                     <td colspan="6" style="text-align:center; padding:30px;">
@@ -113,6 +129,7 @@ include 'includes/header.php';
                     </td>
                 </tr>
             <?php endif; ?>
+
             </tbody>
         </table>
 

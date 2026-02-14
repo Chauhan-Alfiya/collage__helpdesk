@@ -5,6 +5,7 @@ include 'includes/header.php';
 
 $error = "";
 
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $username = trim($_POST['username']);
