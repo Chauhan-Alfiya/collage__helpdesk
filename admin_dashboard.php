@@ -8,6 +8,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] != 'ADMIN') {
 
 include 'includes/db.php';
 include 'includes/header.php';
+include 'includes/nav.php';
 
 //  LOGIC 
 $limit = 10; // records one page
