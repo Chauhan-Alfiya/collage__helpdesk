@@ -22,10 +22,12 @@ switch($role) {
         header("Location: cord_dashboard.php");
         exit();
     case 'STUDENT':
+        header("Location: my_tikcets.php");
+        exit();
     case 'FACULTY':
-        break;
+        header("Location: my_tikcets.php");
+        exit();
     default:
-        session_destroy();
         header("Location: login.php");
         exit();
 }

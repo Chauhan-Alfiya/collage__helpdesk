@@ -5,10 +5,9 @@ include 'includes/db.php';
 include 'includes/header.php';
 
 $user_id = $_SESSION['user_id'];
-$stream  = $_SESSION['stream']; // cord ka stream
+$stream  = $_SESSION['stream']; 
 
-// Coordinator sees all tickets in their stream (assigned or not)
-$stmt = $pdo->prepare("
+ $stmt = $pdo->prepare("
     SELECT * FROM tickets 
     WHERE stream = ?
     ORDER BY FIELD(status, 'OPEN', 'IN-PROGRESS', 'RESOLVED', 'CLOSED'), created_at DESC
