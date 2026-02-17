@@ -23,7 +23,7 @@ $stmt = $pdo->prepare("
 $stmt->execute([$user_id, $stream]);
 $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-include 'includes/header.php';
+include 'includes/header.php'; 
 ?>
 
 <div class="ticket-container">

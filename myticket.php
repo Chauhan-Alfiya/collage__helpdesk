@@ -6,7 +6,7 @@ include 'includes/header.php';
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
-}
+}  
 
 $role  = $_SESSION['role'] ?? '';
 $email = $_SESSION['email'] ?? '';
