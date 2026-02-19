@@ -14,12 +14,13 @@ $user_id  = $_SESSION['user_id'];
 $stream   = $_SESSION['stream']; 
 
 $stmt = $pdo->prepare("
-    SELECT * FROM tickets 
+    SELECT * FROM tickets  
     WHERE assigned_user_id = ? 
       AND stream = ?
       AND status != 'CLOSED' 
     ORDER BY created_at DESC
 ");
+
 $stmt->execute([$user_id, $stream]);
 $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
  

@@ -3,7 +3,6 @@ include 'includes/header.php';
 include 'includes/nav.php';
 ?>
 <style>
-/* Hero Section */
 .hero {
     background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
     color: white;
@@ -26,7 +25,6 @@ include 'includes/nav.php';
     margin: 0 auto 30px;
 }
 
-/* Stats Container */
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));

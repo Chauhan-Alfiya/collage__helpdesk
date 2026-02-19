@@ -11,12 +11,14 @@ $username = $_SESSION['username'];
 $role = $_SESSION['role'];
 $msg = "";
 
-$table = $role === 'STUDENT' ? 'student' : ($role === 'FACULTY' ? 'faculty' : 'users');
+$table = $role === 'STUDENT' ? 'student_details' : ($role === 'FACULTY' ? 'faculty_details' : 'users');
 
 
 if (isset($_POST['update_profile'])) {
 
     $new_username = trim($_POST['new_username']);
+
+    
     $email = $_POST['email'];
 
     $check = $pdo->prepare("SELECT username FROM $table WHERE username = ?");

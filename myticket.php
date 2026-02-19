@@ -7,7 +7,7 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
 }  
-
+ 
 $role  = $_SESSION['role'] ?? '';
 $email = $_SESSION['email'] ?? '';
 
@@ -19,13 +19,13 @@ switch($role) {
         header("Location: staff_dashboard.php");
         exit();
     case 'CORD':
-        header("Location: cord_dashboard.php");
+        header("Location: admin_dashboard.php");
         exit();
     case 'STUDENT':
-        header("Location: my_tikcets.php");
+        header("Location: my_ticket.php");
         exit();
     case 'FACULTY':
-        header("Location: my_tikcets.php");
+        header("Location: my_ticket.php");
         exit();
     default:
         header("Location: login.php");

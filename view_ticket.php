@@ -7,7 +7,6 @@ $search = "";
 
 if (isset($_POST['search'])) {
     $search = $_POST['query'];
-    // Search by Ticket Number OR Email
     $stmt = $pdo->prepare("SELECT * FROM tickets WHERE ticket_number = ? OR requester_email = ? ORDER BY created_at DESC");
     $stmt->execute([$search, $search]);
     $tickets = $stmt->fetchAll();

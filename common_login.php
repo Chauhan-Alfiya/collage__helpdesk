@@ -29,13 +29,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $_SESSION['user_id']  = $user['user_id'];
             $_SESSION['username'] = $user['username'];
-            $_SESSION['role']     = strtoupper($user['role_name']); // ADMIN, CORD, STAFF, STUDENT, FACULTY
-            $_SESSION['email']    = $user['email']; // student/faculty tickets
+            $_SESSION['role']     = strtoupper($user['role_name']);
+            $_SESSION['email']    = $user['email']; 
             $_SESSION['initial']  = strtoupper(substr($user['username'], 0, 1));
 
-            // 🔹 Add stream for staff/cord
             if (in_array($_SESSION['role'], ['STAFF','CORD'])) {
-                $_SESSION['stream'] = $user['department']; // department acts as stream
+                $_SESSION['stream'] = $user['department']; 
             }
 
             // Redirect all to home.php

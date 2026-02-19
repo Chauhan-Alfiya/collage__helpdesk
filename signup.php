@@ -12,10 +12,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
     $username = trim($_POST['username'] ?? '');
     $email    = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
+    $department = $_POST['department'] ?? '';
+    $stream = $_POST['stream'] ?? '';
     $confirm  = $_POST['confirm_password'] ?? '';
     $role     = $_POST['role'] ?? '';
 
-    if (empty($username) || empty($email) || empty($password) || empty($confirm) || empty($role)) {
+    if (empty($username) || empty($email) || empty($password) || empty($confirm) || empty($role) ) {
         $error = "All fields are required.";
     }
     elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -29,11 +31,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
     }
     else {
 
-        $check = $pdo->prepare("SELECT user_id FROM users WHERE email = ?");
-        $check->execute([$email]);
+        $check = $pdo->prepare("SELECT user_id FROM users WHERE email = ? OR username = ?");
+        $check->execute([$email , $username]);
 
         if ($check->rowCount() > 0) {
-            $error = "User already exists with this email.";
+            $error = "User already exists with this email or username.";
         } else {
 
             $roleStmt = $pdo->prepare("SELECT role_id FROM roles WHERE role = ?");
@@ -43,22 +45,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
             if (!$roleData) {
                 $error = "Invalid role selected.";
             } else {
-
-                $hashed_password = password_hash($password, PASSWORD_BCRYPT);
                 $role_id = $roleData['role_id'];
+                $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
-                $insert = $pdo->prepare("
-                    INSERT INTO users (username, email, password, role_id, role)
-                    VALUES (?, ?, ?, ?, ?)
+                $dept_value = $role === 'STUDENT' ? $stream : ($department ?? 'N/A');
+
+                $stmt = $pdo->prepare("
+                    INSERT INTO users (username, email, password, role_id, role, department)
+                    VALUES (?, ?, ?, ?, ?, ?)
                 ");
+                $stmt->execute([$username, $email, $hashed_password, $role_id, $role, $dept_value]);
 
-                $insert->execute([
-                    $username,
-                    $email,
-                    $hashed_password,
-                    $role_id,
-                    $role
-                ]);
+               
+                
 
                 sendRegisterSuccessMail($email, $username);
 

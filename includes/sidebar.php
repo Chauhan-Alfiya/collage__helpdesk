@@ -1,3 +1,4 @@
+
 <input type="checkbox" id="openProfile" hidden>
 
 <label for="openProfile" class="sidebar-overlay"></label>

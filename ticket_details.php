@@ -9,7 +9,6 @@ $user_role = $_SESSION['role'] ?? '';
 $user_id   = $_SESSION['user_id'] ?? 0;
 $user_email = $_SESSION['email'] ?? '';
 
-// Fetch ticket
 $stmt = $pdo->prepare("SELECT * FROM tickets WHERE ticket_id = ?");
 $stmt->execute([$ticket_id]);
 $ticket = $stmt->fetch();
@@ -18,7 +17,6 @@ if (!$ticket) {
     die("Ticket not found");
 }
 
-// --- ACCESS CONTROL ---
 if (in_array($user_role, ['STUDENT','FACULTY'])) {
     if ($ticket['requester_email'] !== $user_email) die("Unauthorized Access");
 }
@@ -31,13 +29,11 @@ if (strpos($user_role, 'CORD') !== false) {
     if ($_SESSION['department'] != $ticket['stream']) die("Unauthorized Access");
 }
 
-// --- HANDLE POST ---
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && !$is_public) {
     $comment = $_POST['comment'] ?? '';
     $new_status = $ticket['status'];
     $assigned_user_id = $ticket['assigned_user_id'];
 
-    // Coordinator actions
     if (strpos($user_role, 'CORD') !== false) {
         if (isset($_POST['assign_staff']) && $ticket['status'] === 'OPEN') {
             $assigned_user_id = getStaffIdByCoordinator($pdo, $user_id, $ticket['stream']);
@@ -49,24 +45,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !$is_public) {
         }
     }
 
-    // Staff actions
     if (strpos($user_role, 'STAFF') !== false && isset($_POST['resolve_ticket']) && $ticket['status'] === 'IN-PROGRESS') {
         $new_status = 'RESOLVED';
         $assigned_user_id = getCoordinatorId($pdo, $ticket['category'], $ticket['stream']);
         $pdo->prepare("UPDATE tickets SET resolved_at = NOW() WHERE ticket_id = ?")->execute([$ticket_id]);
     }
 
-    // Update ticket
     $pdo->prepare("UPDATE tickets SET status=?, assigned_user_id=? WHERE ticket_id=?")
         ->execute([$new_status, $assigned_user_id, $ticket_id]);
 
-    // Insert comment
     if (!empty($comment)) {
         $pdo->prepare("INSERT INTO ticket_comments (ticket_id, user_id, comment_text) VALUES (?,?,?)")
             ->execute([$ticket_id, $user_id, $comment]);
     }
 
-    // Redirect back to proper dashboard
     if ($user_role === 'ADMIN') {
         header("Location: my_ticket.php");
     } elseif (strpos($user_role,'CORD') !== false) {
@@ -79,7 +71,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !$is_public) {
     exit;
 }
 
-// Fetch comments
 $stmt = $pdo->prepare("
     SELECT tc.*, u.username 
     FROM ticket_comments tc
@@ -90,7 +81,6 @@ $stmt = $pdo->prepare("
 $stmt->execute([$ticket_id]);
 $comments = $stmt->fetchAll();
 
-// Fetch attachment
 $stmtAtt = $pdo->prepare("SELECT attachment_id, filename FROM ticket_attachments WHERE ticket_id = ?");
 $stmtAtt->execute([$ticket_id]);
 $attachment = $stmtAtt->fetch();

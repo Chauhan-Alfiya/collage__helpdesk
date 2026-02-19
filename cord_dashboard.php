@@ -1,8 +1,10 @@
 <?php
 session_start();
-if (strpos($_SESSION['role'] ?? '', '_CORD') === false) header("Location: login.php");
+
+
 include 'includes/db.php';
 include 'includes/header.php';
+include 'includes/nav.php';
 
 $user_id = $_SESSION['user_id'];
 $stream  = $_SESSION['stream']; 

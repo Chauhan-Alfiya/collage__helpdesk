@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
                 }
 
                 sendRegisterSuccessMail($email, $username);
-                header("Location: common_login.php");
+                header("Location: home.php");
                 exit();
             }
         }
