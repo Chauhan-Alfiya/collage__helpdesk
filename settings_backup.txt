@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'includes/db.php';
+include 'includes/db.php';
 
 if (!isset($_SESSION['username'])) {
     header("Location: common_login.php");
@@ -8,85 +8,69 @@ if (!isset($_SESSION['username'])) {
 }
 
 $username = $_SESSION['username'];
-$role = $_SESSION['role'] ?? '';
+$role = $_SESSION['role'];
 $msg = "";
+
 
 
 if (isset($_POST['update_profile'])) {
 
     $new_username = trim($_POST['new_username']);
-    $email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
+    $email = $_POST['email'];
+    $check = $pdo->prepare("SELECT username FROM users WHERE username = ?");
+    $check->execute([$new_username]);
 
-    if (!$email) {
-        $msg = "<div class='alert alert-danger'>Invalid email address!</div>";
+    if ($check->rowCount() > 0 && $new_username !== $username) {
+        $msg = "<div class='alert alert-danger'>Username already exists!</div>";
     } else {
+        $stmt = $pdo->prepare("
+            UPDATE users
+            SET username = ?, email = ?
+            WHERE username = ?
+        ");
 
-        $check = $pdo->prepare("
-            SELECT COUNT(*) 
-            FROM users 
-            WHERE username = ?"
-            );
-        $check->execute([$new_username]);
-        $exists = $check->fetchColumn();
+        if ($stmt->execute([$new_username, $email, $username])) {
+            $_SESSION['username'] = $new_username;
+            $username = $new_username;
 
-        if ($exists > 0 && $new_username !== $username) {
-            $msg = "<div class='alert alert-danger'>Username already exists!</div>";
-        } else {
-
-            $stmt = $pdo->prepare("
-                UPDATE users 
-                SET username = ?, email = ?
-                WHERE username = ?
-            ");
-
-            if ($stmt->execute([$new_username, $email, $username])) {
-
-                $_SESSION['username'] = $new_username;
-                $username = $new_username;
-
-                $msg = "<div class='alert alert-success'>Profile updated successfully!</div>";
-            }
+            $msg = "<div class='alert alert-success'>Profile updated successfully!</div>";
         }
     }
 }
+
 
 if (isset($_POST['change_password'])) {
 
     $old_pass = $_POST['old_password'];
-    $new_pass = $_POST['new_password'];
+    $new_pass = password_hash($_POST['new_password'], PASSWORD_DEFAULT);
 
-    if (strlen($new_pass) < 8) {
-        $msg = "<div class='alert alert-danger'>Password must be at least 8 characters long!</div>";
-    } else {
+    $check = $pdo->prepare("SELECT password FROM users WHERE username = ?");
+    $check->execute([$username]);
+    $user = $check->fetch();
 
-        $check = $pdo->prepare("SELECT password FROM users WHERE username = ?");
-        $check->execute([$username]);
-        $user = $check->fetch();
+if ($user && password_verify($old_pass, $user['password'])) {
 
-        if ($user && password_verify($old_pass, $user['password'])) {
+    $new_pass_hash = password_hash($new_pass, PASSWORD_DEFAULT);
 
-            $new_pass_hash = password_hash($new_pass, PASSWORD_DEFAULT);
+    $update = $pdo->prepare("
+        UPDATE users
+        SET password = ?, last_password_change = NOW()
+        WHERE username = ?
+    ");
+    $update->execute([$new_pass_hash, $username]);
 
-            $update = $pdo->prepare("
-                UPDATE users
-                SET password = ?, last_password_change = NOW()
-                WHERE username = ?
-            ");
-
-            $update->execute([$new_pass_hash, $username]);
-
-            $msg = "<div class='alert alert-success'>Password changed successfully!</div>";
-
-        } else {
-            $msg = "<div class='alert alert-danger'>Current password is incorrect!</div>";
-        }
-    }
+    $msg = "<div class='alert alert-success'>Password changed successfully!</div>";
+} else {
+    $msg = "<div class='alert alert-danger'>Current password is incorrect!</div>";
 }
+
+}
+
 
 if (isset($_POST['delete_account'])) {
 
     $pdo->prepare("
-        UPDATE users
+        UPDATE users 
         SET is_deleted = 1,
             is_active = 0,
             deleted_at = NOW()
@@ -98,13 +82,10 @@ if (isset($_POST['delete_account'])) {
     exit();
 }
 
+
 $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
 $stmt->execute([$username]);
-$data = $stmt->fetch(PDO::FETCH_ASSOC);
-
-if (!$data) {
-    die("User not found.");
-}
+$data = $stmt->fetch();
 ?>
 
 <!DOCTYPE html>
@@ -146,6 +127,7 @@ if (!$data) {
         <div class="col-md-9">
             <div class="tab-content shadow-sm p-4 bg-white rounded">
 
+                <!-- PROFILE -->
                 <div class="tab-pane fade show active" id="profile-tab">
                     <h4>Edit Profile</h4>
                     <hr>
@@ -159,8 +141,9 @@ if (!$data) {
                         <div class="mb-3">
                             <label class="form-label">Email Address</label>
                             <input type="email" name="email" class="form-control"
-                                   value="<?= htmlspecialchars($data['email']) ?>" required>
+                                   value="<?= htmlspecialchars($data['email']) ?>" readonly>
                         </div>
+
                         <?php if ($role === 'STUDENT'): ?>
                             <div class="mb-3">
                                 <label class="form-label">Stream</label>
@@ -174,12 +157,14 @@ if (!$data) {
                                        value="<?= htmlspecialchars($data['department']) ?>" readonly>
                             </div>
                         <?php endif; ?>
-                        
+
                         <button type="submit" name="update_profile" class="btn btn-primary">
                             Save Changes
                         </button>
                     </form>
                 </div>
+
+                <!-- PASSWORD -->
                 <div class="tab-pane fade" id="security-tab">
                     <h4>Security Settings</h4>
                     <hr>
@@ -197,7 +182,8 @@ if (!$data) {
                         </button>
                     </form>
                 </div>
-                
+
+                <!-- DELETE -->
                 <div class="tab-pane fade" id="danger-tab">
                     <div class="alert alert-warning">
                         <h5>Attention!</h5>
