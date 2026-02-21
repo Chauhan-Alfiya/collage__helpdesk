@@ -38,6 +38,8 @@ CREATE TABLE users (
 
 ALTER TABLE users
 ADD COLUMN department VARCHAR(100) NOT NULL AFTER role;
+Add column otp_expires DATETIME DEFAULT NULL AFTER reset_expires;
+Add column otp_code VARCHAR(10) DEFAULT NULL AFTER otp_expires;
 
 
 INSERT INTO users (username, email, password, role, role_id)

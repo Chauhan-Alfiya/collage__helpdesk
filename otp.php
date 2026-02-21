@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['verify_otp'])) {
         "SELECT * FROM users 
          WHERE email = ? 
          AND otp_code = ? 
-         AND otp_expires > NOW()"
+         AND otp_expires > NOW()"  
     );
     $stmt->execute([$email, $otp]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);

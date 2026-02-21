@@ -14,9 +14,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_otp'])) {
     $email = trim($_POST['email']);
     $user = null;
 
-    $tables = ['users', 'student', 'faculty']; 
+    $tables = ['users']; 
     foreach ($tables as $table) {
-        $stmt = $pdo->prepare("SELECT * FROM $table WHERE email = ?");
+        $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
         $stmt->execute([$email]); 
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($result) {
@@ -41,8 +41,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_otp'])) {
         $mail = new PHPMailer();
         $mail->isSMTP();
         $mail->Host       = 'smtp.gmail.com';
-        $mail->SMTPAuth   = true;
-        $mail->Username   = 'calfiya1@gmail.com';
+        $mail->SMTPAuth   = true;          
+        $mail->Username   = '';
         $mail->Password   = 'your_app_password'; 
         $mail->SMTPSecure = 'tls';
         $mail->Port       = 587;
