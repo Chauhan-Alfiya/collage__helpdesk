@@ -24,5 +24,5 @@ if ($role === 'ADMIN' || $role === 'STUDENT' || $role === 'FACULTY') {
 else {
     header("Location: index.php");
 }
-exit;
+exit; 
 ?>

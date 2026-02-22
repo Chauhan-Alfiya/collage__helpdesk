@@ -12,7 +12,7 @@ $error = "";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_otp'])) {
     $email = trim($_POST['email']);
-    $user = null;
+    $user = null;  
 
     $tables = ['users']; 
     foreach ($tables as $table) {
