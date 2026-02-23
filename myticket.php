@@ -7,7 +7,7 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
 }  
- 
+
 $role  = $_SESSION['role'] ?? '';
 $email = $_SESSION['email'] ?? '';
 
@@ -22,17 +22,20 @@ switch($role) {
         header("Location: admin_dashboard.php");
         exit();
     case 'STUDENT':
-        header("Location: my_ticket.php");
-        exit();
     case 'FACULTY':
-        header("Location: my_ticket.php");
-        exit();
+        break; 
     default:
         header("Location: login.php");
         exit();
 }
 
-$stmt = $pdo->prepare("SELECT * FROM tickets WHERE requester_email = ? ORDER BY created_at DESC");
+// Fetch tickets with category
+$stmt = $pdo->prepare("
+    SELECT ticket_number, title, category, status, created_at 
+    FROM tickets 
+    WHERE requester_email = ? 
+    ORDER BY created_at DESC
+");
 $stmt->execute([$email]);
 $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -54,7 +57,7 @@ $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <tr>
                     <th>Ticket #</th>
                     <th>Title</th>
-                    <th>Category</th>
+                    <th>Category</th> <!-- Category yaha rahega -->
                     <th>Status</th>
                     <th>Date</th>
                     <th>Action</th>
@@ -66,21 +69,32 @@ $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <tr>
                         <td>#<?= htmlspecialchars($t['ticket_number']) ?></td>
                         <td><?= htmlspecialchars($t['title']) ?></td>
-                        <td><?= htmlspecialchars($t['category']) ?></td>
+
+                        <!-- Category from tickets table -->
                         <td>
-                            <span class="status-badge status-<?= strtolower(str_replace(' ', '-', $t['status'])) ?>">
+                            <span class="category-badge">
+                                <?= htmlspecialchars($t['category']) ?>
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="status-badge status-<?= strtolower($t['status']) ?>">
                                 <?= htmlspecialchars($t['status']) ?>
                             </span>
                         </td>
+
                         <td><?= date('d M Y', strtotime($t['created_at'])) ?></td>
+
                         <td>
                             <a href="ticket_view.php?ticket=<?= urlencode($t['ticket_number']) ?>" class="btn-view">View</a>
                         </td>
                     </tr>
-                <?php endforeach; ?>
+                <?php endforeach; ?> 
             <?php else: ?>
                 <tr>
-                    <td colspan="6" style="text-align:center; padding:30px;">No tickets found</td>
+                    <td colspan="6" style="text-align:center; padding:30px;">
+                        No tickets found
+                    </td>
                 </tr>
             <?php endif; ?>
             </tbody>

@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
         $check->execute([$email , $username]);
 
         if ($check->rowCount() > 0) {
-            $error = "User already exists with this email or username.";
+            $error = "User already exists with this email or username."; 
         } else {
 
             $roleStmt = $pdo->prepare("SELECT role_id FROM roles WHERE role = ?");

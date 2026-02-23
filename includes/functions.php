@@ -19,7 +19,7 @@ function getCoordinatorId($pdo, $category, $stream) {
     }
     
     $stmt = $pdo->prepare("SELECT u.user_id FROM users u JOIN roles r ON u.role_id = r.role_id WHERE r.role_name = ? LIMIT 1");
-    $stmt->execute([$role_name]);
+    $stmt->execute([$role]);
     $user = $stmt->fetch();
     return $user ? $user['user_id'] : null; 
     // Fallback logic could be added here to assign to generic admin if specific cord not found

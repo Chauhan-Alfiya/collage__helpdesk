@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_otp'])) {
 
     $tables = ['users']; 
     foreach ($tables as $table) {
-        $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
+        $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?"); 
         $stmt->execute([$email]); 
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($result) {
