@@ -59,7 +59,6 @@ CREATE TABLE student_details (
 );
 
 
--- 3. Tickets Table
 CREATE TABLE `tickets` (
   `ticket_id` int NOT NULL AUTO_INCREMENT,
   `ticket_number` varchar(20) NOT NULL,

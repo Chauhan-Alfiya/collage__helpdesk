@@ -29,7 +29,6 @@ switch($role) {
         exit();
 }
 
-// Fetch tickets with category
 $stmt = $pdo->prepare("
     SELECT ticket_number, title, category, status, created_at 
     FROM tickets 
@@ -57,7 +56,7 @@ $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <tr>
                     <th>Ticket #</th>
                     <th>Title</th>
-                    <th>Category</th> <!-- Category yaha rahega -->
+                    <th>Category</th>
                     <th>Status</th>
                     <th>Date</th>
                     <th>Action</th>
@@ -70,7 +69,6 @@ $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <td>#<?= htmlspecialchars($t['ticket_number']) ?></td>
                         <td><?= htmlspecialchars($t['title']) ?></td>
 
-                        <!-- Category from tickets table -->
                         <td>
                             <span class="category-badge">
                                 <?= htmlspecialchars($t['category']) ?>
