@@ -33,7 +33,7 @@ CREATE TABLE users (
   reset_token VARCHAR(255) DEFAULT NULL,
   reset_expires DATETIME DEFAULT NULL,
   PRIMARY KEY (user_id),
-  FOREIGN KEY (role_id) REFERENCES roles(role_id)
+  FOREIGN KEY (role_id) REFERENCES roles(role_id) 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 ALTER TABLE users

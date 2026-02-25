@@ -28,6 +28,7 @@ switch($role) {
         header("Location: login.php");
         exit();
 }
+ 
 
 $stmt = $pdo->prepare("
     SELECT ticket_number, title, category, status, created_at 
