@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         SELECT u.user_id, u.username, u.email, u.password, u.is_active, u.is_deleted, r.role AS role_name, u.department
         FROM users u
         JOIN roles r ON u.role_id = r.role_id
-        WHERE u.username = ?
+        WHERE u.username = ?  
     ");
     $stmt->execute([$username]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);

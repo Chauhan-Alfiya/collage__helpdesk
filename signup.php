@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
 <div style="font-weight:bold; font-size:1.5rem; color:var(--primary); align-items:flex-end; gap:0.5rem; transform:translate(50px,6px);">
     <i class="fa-solid fa-graduation-cap" ></i> College Helpdesk
 </div> 
-
+ 
 
 
 <div style="min-height: 140vh; display: flex; align-items: center; justify-content: center;">
