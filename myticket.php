@@ -11,7 +11,7 @@ if (!isset($_SESSION['user_id'])) {
 $role  = $_SESSION['role'] ?? '';
 $email = $_SESSION['email'] ?? '';
   
-switch($role) {
+switch($role) { 
     case 'ADMIN':
         header("Location: admin_dashboard.php");
         exit();
