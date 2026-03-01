@@ -9,6 +9,7 @@ if (stripos($role, '_STAFF') === false) {
     exit();
 }
 
+
 $username = $_SESSION['username'];
 $user_id  = $_SESSION['user_id'];
 $stream   = $_SESSION['stream']; 

@@ -84,7 +84,7 @@ $tickets = $stmt->fetchAll();
                     <td><span style="font-weight:600; color:#555;">#<?= $t['ticket_number'] ?></span></td>
                     
                     <td><?= $t['stream'] ? $t['stream'] : '-' ?></td>
-                    
+                     
                     <td><?= $t['category'] ?></td>
                     
                     <td>
