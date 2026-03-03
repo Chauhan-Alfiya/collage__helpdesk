@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
     $department = $_POST['department'] ?? '';
     $stream     = $_POST['stream'] ?? '';
     $semester   = $_POST['semester'] ?? '';
-
+ 
     if (empty($role)) {
         $error = "Please select a role first.";
     } elseif (empty($username) || empty($email) || empty($password) || empty($confirm)) {

@@ -10,8 +10,8 @@ if (stripos($role, '_STAFF') === false) {
 }
 
 
-$username = $_SESSION['username'];
-$user_id  = $_SESSION['user_id'];
+$username = $_SESSION['username'];  
+$user_id  = $_SESSION['user_id'];  
 $stream   = $_SESSION['stream'];  
 
 $stmt = $pdo->prepare("
