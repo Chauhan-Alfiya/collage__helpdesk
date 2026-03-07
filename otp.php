@@ -12,6 +12,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['verify_otp'])) {
 
     
 
+
+    
     $stmt = $pdo->prepare(
         "SELECT * FROM users 
          WHERE email = ? 
