@@ -8,7 +8,7 @@ $email = $_GET['email'] ?? ($_POST['email'] ?? '');
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['verify_otp'])) {
 
     $otp   = trim($_POST['otp']);       
-    $email = trim($_POST['email']);     
+    $email = trim($_POST['email']);      
     $stmt = $pdo->prepare(
         "SELECT * FROM users 
          WHERE email = ? 
