@@ -21,7 +21,7 @@ switch($role) {
     case 'CORD':
         header("Location: admin_dashboard.php");
         exit();
-    case 'STUDENT':
+    case 'STUDENT':  
     case 'FACULTY':
         break; 
     default:
