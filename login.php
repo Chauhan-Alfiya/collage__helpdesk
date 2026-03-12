@@ -1,7 +1,7 @@
 <?php
 session_start();
 include 'includes/db.php';
-include 'includes/index_header.php'; 
+include 'includes/index_header.php';   
 
 $error = "";
 
