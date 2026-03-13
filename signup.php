@@ -17,6 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
     $confirm  = $_POST['confirm_password'] ?? '';
     $role     = $_POST['role'] ?? '';
 
+    
     if (empty($username) || empty($email) || empty($password) || empty($confirm) || empty($role) ) {
         $error = "All fields are required.";
     }
