@@ -7,9 +7,6 @@ include 'includes/send_mail.php';
 $error = '';
 $role = $_POST['role'] ?? '';
 
-
-
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
 
     $username = trim($_POST['username'] ?? '');
