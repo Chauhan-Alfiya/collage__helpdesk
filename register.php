@@ -149,6 +149,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
                     <input type="password" name="password" class="form-control" placeholder="••••••••" required>
                 </div>
 
+                
                 <div class="form-group">
                     <label>Confirm Password</label>
                     <input type="password" name="confirm_password" class="form-control" placeholder="••••••••" required>
