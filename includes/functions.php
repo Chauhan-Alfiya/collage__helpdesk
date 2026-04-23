@@ -32,6 +32,7 @@ function getCoordinatorId($pdo, $category, $stream) {
     // Fallback logic could be added here to assign to generic admin if specific cord not found
 }
 
+
 // Function to route ticket to Staff based on Coordinator
 function getStaffIdByCoordinator($pdo, $coordinator_id) {
     // Logic: Find the corresponding staff role for this coordinator's stream/cat
