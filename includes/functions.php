@@ -59,7 +59,7 @@ function sendNotification($email, $subject, $message) {
 // Get Coordinator ID based on Category & Stream
 
 
-// =====================================================
+// =====================================================  
 function getCoordinatorId($pdo, $category, $stream) {
 
     $role = '';
