@@ -79,7 +79,11 @@ CREATE TABLE `tickets` (
 
 
 -- 4. Ticket Comments Table
+<<<<<<< HEAD
 CREATEa TABLE `ticket_comments` (
+=======
+CREATE TABLE `ticket_comments` (
+>>>>>>> 984c313 (all file commit)
   `comment_id` int NOT NULL AUTO_INCREMENT,
   `ticket_id` int NOT NULL,
   `user_id` int DEFAULT NULL, -- NULL if system generated or public
