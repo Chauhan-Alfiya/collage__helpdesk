@@ -17,6 +17,7 @@ INSERT INTO roles (role) VALUES
 ('FACULTY');
 
 
+
 CREATE TABLE users (
   user_id INT NOT NULL AUTO_INCREMENT,
   username VARCHAR(100) NOT NULL UNIQUE,
