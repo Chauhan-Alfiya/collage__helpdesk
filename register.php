@@ -16,7 +16,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
     $department = $_POST['department'] ?? '';
     $stream     = $_POST['stream'] ?? '';
     $semester   = $_POST['semester'] ?? '';
- 
 
     if (empty($role)) {
         $error = "Please select a role first.";
@@ -29,11 +28,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
     } elseif (strlen($password) < 8) {
         $error = "Password must be at least 8 characters long.";
     } else {
+
         $check = $pdo->prepare("SELECT user_id FROM users WHERE email = ? OR username = ?");
         $check->execute([$email, $username]);
+
         if ($check->rowCount() > 0) {
             $error = "Username or Email already exists.";
         } else {
+
             $roleStmt = $pdo->prepare("SELECT role_id FROM roles WHERE role = ?");
             $roleStmt->execute([$role]);
             $roleData = $roleStmt->fetch(PDO::FETCH_ASSOC);
@@ -41,10 +43,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
             if (!$roleData) {
                 $error = "Invalid role selected.";
             } else {
+
                 $role_id = $roleData['role_id'];
                 $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
-                $dept_value = $role === 'STUDENT' ? $stream : ($department ?? 'N/A');
+                // 🎯 FIXED LOGIC
+                if ($role === 'STUDENT') {
+                    $dept_value = $stream;
+                } elseif ($role === 'FACULTY') {
+                    $dept_value = $department;
+                } else {
+                    $dept_value = 'N/A';
+                }
 
                 $stmt = $pdo->prepare("
                     INSERT INTO users (username, email, password, role_id, role, department)
@@ -66,12 +76,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
     }
 }
 ?>
-<div style="font-weight:bold; font-size:1.5rem; color:var(--primary); align-items:flex-end; gap:0.5rem; transform:translate(50px,6px);">
-    <i class="fa-solid fa-graduation-cap" ></i> College Helpdesk
+
+<div style="font-weight:bold; font-size:1.5rem; color:var(--primary); transform:translate(50px,6px);">
+    <i class="fa-solid fa-graduation-cap"></i> College Helpdesk
 </div> 
 
 <div style="min-height: 140vh; display: flex; align-items: center; justify-content: center;">
     <div class="card" style="width: 120%; max-width: 440px; padding: 2.5rem;">
+        
         <div style="text-align: center; margin-bottom: 1rem;">
             <i class="fa-solid fa-user-plus" style="font-size: 3rem; color: var(--primary);"></i>
             <h2 style="margin-top: 1rem;">Register</h2>
@@ -83,6 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
         <?php endif; ?>
 
         <form method="POST">
+            
             <div class="form-group">
                 <label>Select Role</label>
                 <select name="role" class="form-control" required onchange="this.form.submit()">
@@ -94,71 +107,70 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
                 </select>
             </div>
 
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" name="username" class="form-control" required value="<?= htmlspecialchars($_POST['username'] ?? '') ?>">
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" name="email" class="form-control" required value="<?= htmlspecialchars($_POST['email'] ?? '') ?>">
+            </div>
+
+            <!-- 🎯 ROLE BASED UI -->
+            <?php if ($role === 'STUDENT'): ?>
+
                 <div class="form-group">
-                    <label>Username</label>
-                    <input type="text" name="username" class="form-control" placeholder="Enter Username" required value="<?= htmlspecialchars($_POST['username'] ?? '') ?>">
+                    <label>Stream</label>
+                    <select name="stream" class="form-control" required>
+                        <option value="MCA">MCA</option>
+                        <option value="BCA">BCA</option>
+                        <option value="BBA">BBA</option>
+                        <option value="MBA">MBA</option>
+                    </select>
                 </div>
 
                 <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" name="email" class="form-control" placeholder="Enter Email" required value="<?= htmlspecialchars($_POST['email'] ?? '') ?>">
+                    <label>Semester</label>
+                    <input type="number" name="semester" class="form-control" min="1" max="8" required>
                 </div>
+
+            <?php elseif ($role === 'FACULTY'): ?>
+
                 <div class="form-group">
                     <label>Department</label>
-                        <select name="department" class="form-control" required>
-                            <option value="">Select Department</option>
-                            <option value="MCA" <?= ($_POST['department'] ?? '') === 'MCA' ? 'selected' : '' ?>>MCA</option>
-                            <option value="BCA" <?= ($_POST['department'] ?? '') === 'BCA' ? 'selected' : '' ?>>BCA</option>
-                            <option value="BBA" <?= ($_POST['department'] ?? '') === 'BBA' ? 'selected' : '' ?>>BBA</option>
-                            <option value="MBA" <?= ($_POST['department'] ?? '') === 'MBA' ? 'selected' : '' ?>>MBA</option>
-                            <option value="BCOM" <?= ($_POST['department'] ?? '') === 'BCOM' ? 'selected' : '' ?>>BCOM</option>
-                            <option value="MCOM" <?= ($_POST['department'] ?? '') === 'MCOM' ? 'selected' : '' ?>>MCOM</option>
-                            <option value="BSC" <?= ($_POST['department'] ?? '') === 'BSC' ? 'selected' : '' ?>>BSC</option> <option value="MSC" <?= ($_POST['department'] ?? '') === 'MSC' ? 'selected' : '' ?>>MSC</option>
-                            <option value="BA" <?= ($_POST['department'] ?? '') === 'BA' ? 'selected' : '' ?>>BA</option> 
-                            </select>
-        </div>
-                <?php if ($role === 'STUDENT'): ?>
-                    <div class="form-group">
-                        <label>Stream</label>
-                        <select name="stream" class="form-control" required>
-                            <option value="MCA" <?= ($_POST['stream'] ?? '') === 'MCA' ? 'selected' : '' ?>>MCA</option>
-                            <option value="BCA" <?= ($_POST['stream'] ?? '') === 'BCA' ? 'selected' : '' ?>>BCA</option>
-                            <option value="BBA" <?= ($_POST['stream'] ?? '') === 'BBA' ? 'selected' : '' ?>>BBA</option>
-                            <option value="MBA" <?= ($_POST['stream'] ?? '') === 'MBA' ? 'selected' : '' ?>>MBA</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Semester</label>
-                        <input type="number" name="semester" class="form-control" placeholder="Enter Semester" min="1" max="8" required value="<?= htmlspecialchars($_POST['semester'] ?? '') ?>">
-                    </div>
-                <?php elseif ($role === 'FACULTY'): ?>
-                    <div class="form-group">
-                        <label>Department</label>
-                        <select name="department" class="form-control" required>
-                            <option value="">Select Department</option>
-                            <option value="MCA" <?= ($_POST['department'] ?? '') === 'MCA' ? 'selected' : '' ?>>MCA</option>
-                            <option value="BCA" <?= ($_POST['department'] ?? '') === 'BCA' ? 'selected' : '' ?>>BCA</option>
-                            <option value="BBA" <?= ($_POST['department'] ?? '') === 'BBA' ? 'selected' : '' ?>>BBA</option>
-                            <option value="MBA" <?= ($_POST['department'] ?? '') === 'MBA' ? 'selected' : '' ?>>MBA</option>
-                        </select>
-                    </div>
-                <?php endif; ?>
-
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" name="password" class="form-control" placeholder="••••••••" required>
-                </div>
-                <div class="form-group">
-                    <label>Confirm Password</label>
-                    <input type="password" name="confirm_password" class="form-control" placeholder="••••••••" required>
+                    <select name="department" class="form-control" required>
+                        <option value="">Select Department</option>
+                        <option value="MCA">MCA</option>
+                        <option value="BCA">BCA</option>
+                        <option value="BBA">BBA</option>
+                        <option value="MBA">MBA</option>
+                        <option value="BCOM">BCOM</option>
+                        <option value="MCOM">MCOM</option>
+                        <option value="BSC">BSC</option>
+                        <option value="MSC">MSC</option>
+                        <option value="BA">BA</option>
+                    </select>
                 </div>
 
-                <button type="submit" name="register" class="btn btn-primary" style="width:100%; margin-top:10px;">Register</button>
+            <?php endif; ?>
+
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="password" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label>Confirm Password</label>
+                <input type="password" name="confirm_password" class="form-control" required>
+            </div>
+
+            <button type="submit" name="register" class="btn btn-primary" style="width:100%; margin-top:10px;">Register</button>
 
             <div style="text-align:center; margin-top:20px;">
                 <p>Already have an account? <a href="common_login.php">Log in</a></p>
             </div>
+
         </form>
     </div>
-</div>
-
+</div> 

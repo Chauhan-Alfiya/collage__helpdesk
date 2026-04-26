@@ -50,8 +50,50 @@ VALUES (
     '$2y$10$FYhRXaElfD9aVBXjzkNn.OvXmBL8lhbzsi/UKlrIVfRAJivad27Vi',
     'ADMIN',
     (SELECT role_id FROM roles WHERE role = 'ADMIN')
-);
 
+);
+INSERT INTO users (username, email, password, role, role_id, department)
+VALUES 
+
+-- BCA Coordinator
+(
+    'BCA_Cord',
+    'bcacoord@helpdesk.com',
+    '$2y$10$FYhRXaElfD9aVBXjzkNn.OvXmBL8lhbzsi/UKlrIVfRAJivad27Vi',
+    'CORD',
+    (SELECT role_id FROM roles WHERE role = 'CORD'),
+    'BCA'
+),
+
+-- MCA Coordinator
+(
+    'MCA_Cord',
+    'mcacoord@helpdesk.com',
+    '$2y$10$FYhRXaElfD9aVBXjzkNn.OvXmBL8lhbzsi/UKlrIVfRAJivad27Vi',
+    'CORD',
+    (SELECT role_id FROM roles WHERE role = 'CORD'),
+    'MCA'
+),
+
+-- BCA Staff
+(
+    'BCA_Staff',
+    'bcastaff@helpdesk.com',
+    '$2y$10$FYhRXaElfD9aVBXjzkNn.OvXmBL8lhbzsi/UKlrIVfRAJivad27Vi',
+    'STAFF',
+    (SELECT role_id FROM roles WHERE role = 'STAFF'),
+    'BCA'
+),
+
+-- MCA Staff
+(
+    'MCA_Staff',
+    'mcastaff@helpdesk.com',
+    '$2y$10$FYhRXaElfD9aVBXjzkNn.OvXmBL8lhbzsi/UKlrIVfRAJivad27Vi',
+    'STAFF',
+    (SELECT role_id FROM roles WHERE role = 'STAFF'),
+    'MCA'
+);
 CREATE TABLE student_details (
   user_id INT NOT NULL,
   semester INT NOT NULL,
