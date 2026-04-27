@@ -1,3 +1,4 @@
+
 <?php
 session_start();
 include 'includes/db.php';
@@ -10,23 +11,27 @@ if (!isset($_SESSION['user_id'])) {
 
 $role  = $_SESSION['role'] ?? '';
 $email = $_SESSION['email'] ?? '';
-  
-switch($role) {  
-    case 'ADMIN':
-        header("Location: admin_dashboard.php");
-        exit();
-    case 'STAFF':
-        header("Location: staff_dashboard.php");
-        exit();
-    case 'CORD':
-        header("Location: admin_dashboard.php");
-        exit();
-    case 'STUDENT':  
-    case 'FACULTY':
-        break; 
-    default:
-        header("Location: login.php");
-        exit();
+
+// ✅ FIX: Proper role handling
+if ($role === 'ADMIN') {
+    header("Location: admin_dashboard.php");
+    exit();
+} 
+elseif ($role === 'STAFF') {
+    header("Location: staff_dashboard.php");
+    exit();
+} 
+elseif (strpos($role, 'CORD') !== false) {
+    // Any role like TECH_CORD, BCA_CORD etc
+    header("Location: cord_dashboard.php"); // 👉 create this page
+    exit();
+} 
+elseif ($role === 'STUDENT' || $role === 'FACULTY') {
+    // allowed to stay on this page
+} 
+else {
+    header("Location: login.php");
+    exit();
 }
  
 

@@ -47,7 +47,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
                 $role_id = $roleData['role_id'];
                 $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
-                // 🎯 FIXED LOGIC
                 if ($role === 'STUDENT') {
                     $dept_value = $stream;
                 } elseif ($role === 'FACULTY') {
@@ -117,7 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
                 <input type="email" name="email" class="form-control" required value="<?= htmlspecialchars($_POST['email'] ?? '') ?>">
             </div>
 
-            <!-- 🎯 ROLE BASED UI -->
+            <!-- ROLE BASED UI -->
             <?php if ($role === 'STUDENT'): ?>
 
                 <div class="form-group">
