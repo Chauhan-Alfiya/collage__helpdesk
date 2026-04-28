@@ -55,7 +55,7 @@ VALUES (
 INSERT INTO users (username, email, password, role, role_id, department)
 VALUES 
 
--- BCA Coordinator
+
 (
     'BCA_Cord',
     'bcacoord@helpdesk.com',
@@ -65,7 +65,7 @@ VALUES
     'BCA'
 ),
 
--- MCA Coordinator
+
 (
     'MCA_Cord',
     'mcacoord@helpdesk.com',
