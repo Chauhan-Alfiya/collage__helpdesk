@@ -56,10 +56,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
                     VALUES (?, ?, ?, ?, ?, ?)
                 ");
                 $stmt->execute([$username, $email, $hashed_password, $role_id, $role, $dept_value]);
-
-               
-                
-
                 sendRegisterSuccessMail($email, $username);
 
                 header("Location: common_login.php");
