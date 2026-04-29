@@ -16,8 +16,6 @@ INSERT INTO roles (role) VALUES
 ('STUDENT'),
 ('FACULTY');
 
-
-
 CREATE TABLE users (
   user_id INT NOT NULL AUTO_INCREMENT,
   username VARCHAR(100) NOT NULL UNIQUE,
@@ -25,6 +23,7 @@ CREATE TABLE users (
   password VARCHAR(255) NOT NULL,
   role_id INT NOT NULL,
   role VARCHAR(50) NOT NULL,
+  department VARCHAR(100) NOT NULL,
   is_active BOOLEAN DEFAULT TRUE,
   is_deleted BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -33,14 +32,12 @@ CREATE TABLE users (
   deleted_at DATETIME DEFAULT NULL,
   reset_token VARCHAR(255) DEFAULT NULL,
   reset_expires DATETIME DEFAULT NULL,
+  otp_code VARCHAR(10) DEFAULT NULL,
+  otp_expires DATETIME DEFAULT NULL,
   PRIMARY KEY (user_id),
-  FOREIGN KEY (role_id) REFERENCES roles(role_id) 
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  FOREIGN KEY (role_id) REFERENCES roles(role_id)
+);
 
-ALTER TABLE users
-ADD COLUMN department VARCHAR(100) NOT NULL AFTER role;
-Add column otp_expires DATETIME DEFAULT NULL AFTER reset_expires;
-Add column otp_code VARCHAR(10) DEFAULT NULL AFTER otp_expires;
 
 
 INSERT INTO users (username, email, password, role, role_id)
@@ -122,11 +119,7 @@ CREATE TABLE `tickets` (
 
 
 -- 4. Ticket Comments Table
-<<<<<<< HEAD
-CREATEa TABLE `ticket_comments` (
-=======
 CREATE TABLE `ticket_comments` (
->>>>>>> 984c313 (all file commit)
   `comment_id` int NOT NULL AUTO_INCREMENT,
   `ticket_id` int NOT NULL,
   `user_id` int DEFAULT NULL, -- NULL if system generated or public

@@ -37,7 +37,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_otp'])) {
             WHERE email = ?
         ");
         $stmt->execute([$otp_code, $email]);
-
         $mail = new PHPMailer();
         $mail->isSMTP();
         $mail->Host       = 'smtp.gmail.com';
