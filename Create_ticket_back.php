@@ -17,11 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $assigned_to = getCoordinatorId($pdo, $category, $stream);
 
     if ($assigned_to) {
-
-       
         $ticket_num = generateTicketNumber();
-
-        
         $sql = "INSERT INTO tickets
         (ticket_number, requester_email, requester_type, stream, category, title, description, assigned_user_id)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -53,7 +49,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $_FILES['attachment']['type']
             ]);
         }
-
         
         $msg = "
         <div class='alert success'>
@@ -70,7 +65,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 ?>
-
 <?php include 'includes/header.php'; ?>
 
 <div class="container">

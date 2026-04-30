@@ -12,7 +12,6 @@ if (!isset($_SESSION['user_id'])) {
 $role  = $_SESSION['role'] ?? '';
 $email = $_SESSION['email'] ?? '';
 
-// ✅ FIX: Proper role handling
 if ($role === 'ADMIN') {
     header("Location: admin_dashboard.php");
     exit();
@@ -34,7 +33,6 @@ else {
     exit();
 }
  
-
 $stmt = $pdo->prepare("
     SELECT ticket_number, title, category, status, created_at 
     FROM tickets 

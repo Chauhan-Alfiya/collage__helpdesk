@@ -8,6 +8,7 @@ if (!isset($_SESSION['reset_email'])) {
     exit();
 }
 
+
 $msg = "";
 if (isset($_SESSION['temp_otp'])) {
     $msg = "<div class='alert alert-info'>Testing Mode: Your OTP is <b>" . $_SESSION['temp_otp'] . "</b></div>";
