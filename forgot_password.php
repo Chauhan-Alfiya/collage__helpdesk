@@ -7,7 +7,6 @@ use PHPMailer\PHPMailer\PHPMailer;
 require 'phpMailer/PHPMailer.php';
 require 'phpMailer/SMTP.php';
 require 'phpMailer/Exception.php';
-
 $error = "";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_otp'])) {

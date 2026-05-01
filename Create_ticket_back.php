@@ -35,8 +35,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         ]);
 
         $ticket_id = $pdo->lastInsertId();
-
-      
         if (!empty($_FILES['attachment']['name'])) {
             $stmtAtt = $pdo->prepare(
                 "INSERT INTO ticket_attachments (ticket_id, filename, file_data, mime_type)
