@@ -3,7 +3,6 @@ session_start();
 include 'includes/db.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
-
 require 'phpMailer/PHPMailer.php';
 require 'phpMailer/SMTP.php';
 require 'phpMailer/Exception.php';
