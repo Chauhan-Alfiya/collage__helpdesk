@@ -7,7 +7,6 @@ require 'phpMailer/PHPMailer.php';
 require 'phpMailer/SMTP.php';
 require 'phpMailer/Exception.php';
 $error = "";
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_otp'])) {
     $email = trim($_POST['email']);
     $user = null;  

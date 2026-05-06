@@ -11,6 +11,8 @@ include 'includes/index_header.php';
     .feature-card:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important; }
     .status-dot { height: 10px; width: 10px; background-color: #22c55e; border-radius: 50%; display: inline-block; margin-right: 5px; box-shadow: 0 0 8px #22c55e; }
 </style>
+
+
 <main>
     <section class="hero-gradient text-white py-5">
         <div class="container py-5">
