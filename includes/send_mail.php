@@ -2,7 +2,6 @@
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-
 require_once __DIR__ . '/../phpMailer/src/PHPMailer.php';
 require_once __DIR__ . '/../phpMailer/src/SMTP.php';
 require_once __DIR__ . '/../phpMailer/src/Exception.php';
@@ -42,7 +41,6 @@ function sendRegisterSuccessMail($toEmail, $toName)
         $mail->AltBody = "Hello $toName, Your registration was successful. You can now log in.";
 
         return $mail->send();
-
     } catch (Exception $e) {
         error_log("Email Error: {$mail->ErrorInfo}");
         return false;
