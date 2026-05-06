@@ -10,7 +10,6 @@ require_once __DIR__ . '/../phpMailer/src/Exception.php';
 function sendRegisterSuccessMail($toEmail, $toName)
 {
     $mail = new PHPMailer(true);
-
     try {
         // SMTP CONFIG
         $mail->isSMTP();
