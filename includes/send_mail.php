@@ -15,7 +15,6 @@ function sendRegisterSuccessMail($toEmail, $toName)
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
 
-
         $mail->Username = 'college.helpdesk.system@gmail.com';
         $mail->Password = 'YOUR_APP_PASSWORD'; // 16-digit app password
 

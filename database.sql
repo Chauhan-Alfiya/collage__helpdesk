@@ -129,6 +129,7 @@ CREATE TABLE `ticket_comments` (
   FOREIGN KEY (`ticket_id`) REFERENCES `tickets`(`ticket_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
  
+ 
 -- 5. Attachments Table
 CREATE TABLE `ticket_attachments` (
   `attachment_id` int NOT NULL AUTO_INCREMENT,
