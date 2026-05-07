@@ -8,7 +8,6 @@ CREATE TABLE roles (
   role VARCHAR(50) NOT NULL UNIQUE,
   PRIMARY KEY (role_id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
 INSERT INTO roles (role) VALUES
 ('ADMIN'),
 ('CORD'),
