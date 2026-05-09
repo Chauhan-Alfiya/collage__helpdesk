@@ -1,7 +1,6 @@
 <?php
     include 'includes/index_header.php';
 ?>
-
 <!-- Hero -->
 <section class="about-hero" style="background-image: url('images/2.jpg');">
     <div class="hero-inner">
