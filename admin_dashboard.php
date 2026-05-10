@@ -5,11 +5,9 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] != 'ADMIN') {
     header("Location: common_login.php");
     exit;
 }
-
 include 'includes/db.php';
 include 'includes/header.php';
 include 'includes/nav.php';
-
 $limit = 10; // records one page
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 if ($page < 1) $page = 1;
