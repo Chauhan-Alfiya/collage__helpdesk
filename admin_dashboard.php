@@ -1,8 +1,9 @@
 <?php
 session_start();
+
 // Check
 if (!isset($_SESSION['role']) || $_SESSION['role'] != 'ADMIN') {
-    header("Location: common_login.php");
+    header("Location: common_login.php"); 
     exit;
 }
 include 'includes/db.php';
