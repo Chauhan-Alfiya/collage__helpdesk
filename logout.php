@@ -14,8 +14,6 @@ if (ini_get("session.use_cookies")) {
 
 session_destroy();
 
-
-
 if ($role === 'ADMIN' || $role === 'STUDENT' || $role === 'FACULTY') {
     header("Location: index.php");
 }
