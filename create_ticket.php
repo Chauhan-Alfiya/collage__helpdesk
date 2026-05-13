@@ -9,7 +9,6 @@ if (!isset($_SESSION['username'])) {
     header("Location: common_login.php");
     exit();
 }
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $requester_type = $_POST['requester_type'];
     $email          = $_POST['email'];
