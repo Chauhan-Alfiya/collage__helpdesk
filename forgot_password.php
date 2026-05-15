@@ -38,12 +38,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_otp'])) {
         $mail->isSMTP();
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;          
-        $mail->Username   = '';
-        $mail->Password   = 'your_app_password'; 
+        $mail->Username   = 'college.helpdesk.system@gmail.com';
+        $mail->Password   = 'wirl nall wlom eojn'; 
         $mail->SMTPSecure = 'tls';
         $mail->Port       = 587;
 
-        $mail->setFrom('no-reply@yourdomain.com', 'Helpdesk');
+        $mail->setFrom('college.helpdesk.system@gmail.com',
+    'College Helpdesk');
         $mail->addAddress($email);
 
         $mail->isHTML(true);
