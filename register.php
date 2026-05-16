@@ -31,7 +31,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
 
         $check = $pdo->prepare("SELECT user_id FROM users WHERE email = ? OR username = ?");
         $check->execute([$email, $username]);
-
         if ($check->rowCount() > 0) {
             $error = "Username or Email already exists.";
         } else {
