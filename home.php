@@ -100,7 +100,6 @@ include 'includes/nav.php';
     box-shadow: 0 4px 6px rgba(0,0,0,0.05);
     flex-shrink: 0;
 }
-
 /* Buttons */
 .cta-group {
     display: flex;
