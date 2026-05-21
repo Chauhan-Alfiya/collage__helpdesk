@@ -96,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <option value="Academic">Academic</option>
                             <option value="Technical">Technical</option>
                             <option value="Facility">Facility</option>
-                            <option value="Other">Other</option>
+                            
                         </select>
                         <i class="fas fa-tags"></i>
                     </div>
