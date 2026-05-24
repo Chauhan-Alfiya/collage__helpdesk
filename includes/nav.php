@@ -1,4 +1,4 @@
-<div style="font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif; background: #f8fafc; min-height: 100vh; margin: 0; padding: 0;">
+
 
     <nav class="navbar" style="display: flex; justify-content: space-between; align-items: center; padding: 14px 64px; background: #ffffff; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 1000; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
         
@@ -27,4 +27,3 @@
     </nav>
 
     
-</div>
