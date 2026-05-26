@@ -1,7 +1,8 @@
 <?php
 session_start();
+
 include 'includes/db.php';
-include 'includes/header.php';                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+include 'includes/header.php';
 include 'includes/send_mail.php';
 
 $error = '';
@@ -9,146 +10,405 @@ $role = $_POST['role'] ?? '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
 
-    $username = trim($_POST['username'] ?? '');
-    $email    = trim($_POST['email'] ?? '');
-    $password = $_POST['password'] ?? '';
+    $username   = trim($_POST['username'] ?? '');
+    $email      = trim($_POST['email'] ?? '');
+    $password   = $_POST['password'] ?? '';
     $department = $_POST['department'] ?? '';
-    $stream = $_POST['stream'] ?? '';
-    $confirm  = $_POST['confirm_password'] ?? '';
-    $role     = $_POST['role'] ?? '';
+    $stream     = $_POST['stream'] ?? '';
+    $confirm    = $_POST['confirm_password'] ?? '';
+    $role       = $_POST['role'] ?? '';
 
-    
-    if (empty($username) || empty($email) || empty($password) || empty($confirm) || empty($role) ) {
+    // VALIDATION
+
+    if (
+        empty($username) ||
+        empty($email) ||
+        empty($password) ||
+        empty($confirm) ||
+        empty($role)
+    ) {
+
         $error = "All fields are required.";
-    }
-    elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $error = "Invalid email format.";
-    }
-    elseif ($password !== $confirm) {
-        $error = "Passwords do not match.";
-    }
-    elseif (strlen($password) < 8) {
-        $error = "Password must be at least 8 characters long.";
-    }
-    else {
 
-        $check = $pdo->prepare("SELECT user_id FROM users WHERE email = ? OR username = ?");
-        $check->execute([$email , $username]);
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+
+        $error = "Invalid email format.";
+
+    } elseif ($password !== $confirm) {
+
+        $error = "Passwords do not match.";
+
+    } elseif (strlen($password) < 8) {
+
+        $error = "Password must be at least 8 characters long.";
+
+    } else {
+
+        // CHECK USER
+
+        $check = $pdo->prepare("
+            SELECT user_id 
+            FROM users 
+            WHERE email = ? OR username = ?
+        ");
+
+        $check->execute([$email, $username]);
 
         if ($check->rowCount() > 0) {
-            $error = "User already exists with this email or username."; 
+
+            $error = "User already exists with this email or username.";
+
         } else {
 
-            $roleStmt = $pdo->prepare("SELECT role_id FROM roles WHERE role = ?");
+            // ROLE FETCH
+
+            $roleStmt = $pdo->prepare("
+                SELECT role_id 
+                FROM roles 
+                WHERE role = ?
+            ");
+
             $roleStmt->execute([$role]);
+
             $roleData = $roleStmt->fetch(PDO::FETCH_ASSOC);
 
             if (!$roleData) {
-                $error = "Invalid role selected.";
-            } else {
-                $role_id = $roleData['role_id'];
-                $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
-                $dept_value = $role === 'STUDENT' ? $stream : ($department ?? 'N/A');
+                $error = "Invalid role selected.";
+
+            } else {
+
+                $role_id = $roleData['role_id'];
+
+                $hashed_password = password_hash(
+                    $password,
+                    PASSWORD_BCRYPT
+                );
+
+                // DEPARTMENT VALUE
+
+                $dept_value = $role === 'STUDENT'
+                    ? $stream
+                    : ($department ?? 'N/A');
+
+                // INSERT USER
 
                 $stmt = $pdo->prepare("
-                    INSERT INTO users (username, email, password, role_id, role, department)
+                    INSERT INTO users
+                    (
+                        username,
+                        email,
+                        password,
+                        role_id,
+                        role,
+                        department
+                    )
                     VALUES (?, ?, ?, ?, ?, ?)
                 ");
-                $stmt->execute([$username, $email, $hashed_password, $role_id, $role, $dept_value]);
-                sendRegisterSuccessMail($email, $username);
+
+                $stmt->execute([
+                    $username,
+                    $email,
+                    $hashed_password,
+                    $role_id,
+                    $role,
+                    $dept_value
+                ]);
+
+                // SEND EMAIL
+
+                $mailSent = sendRegisterSuccessMail(
+                    $email,
+                    $username
+                );
+
+                // SUCCESS MESSAGE
+
+                if ($mailSent) {
+
+                    $_SESSION['success'] =
+                    "Registration successful! Check your email.";
+
+                } else {
+
+                    $_SESSION['success'] =
+                    "Registration successful but email not sent.";
+
+                }
 
                 header("Location: common_login.php");
                 exit();
             }
         }
-    } 
-    
+    }
 }
 ?>
-<div style="font-weight:bold; font-size:1.5rem; color:var(--primary); align-items:flex-end; gap:0.5rem; transform:translate(50px,6px);">
-    <i class="fa-solid fa-graduation-cap" ></i> College Helpdesk
-</div> 
- 
 
+<div style="
+    font-weight:bold;
+    font-size:1.5rem;
+    color:var(--primary);
+    transform:translate(50px,6px);
+">
+    <i class="fa-solid fa-graduation-cap"></i>
+    College Helpdesk
+</div>
 
-<div style="min-height: 140vh; display: flex; align-items: center; justify-content: center;">
-    <div class="card" style="width: 120%; max-width: 440px; padding: 2.5rem;">
-        <div style="text-align: center; margin-bottom: 1rem;">
-            <i class="fa-solid fa-user-plus" style="font-size: 3rem; color: var(--primary);"></i>
-            <h2 style="border: none; margin-top: 1rem;">Register</h2>
+<div style="
+    min-height:140vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+">
+
+    <div class="card" style="
+        width:120%;
+        max-width:440px;
+        padding:2.5rem;
+    ">
+
+        <div style="
+            text-align:center;
+            margin-bottom:1rem;
+        ">
+
+            <i class="fa-solid fa-user-plus"
+               style="
+               font-size:3rem;
+               color:var(--primary);
+            ">
+            </i>
+
+            <h2 style="
+                border:none;
+                margin-top:1rem;
+            ">
+                Register
+            </h2>
+
             <p>Create a new account</p>
-        </div>
-        <?php if(isset($error)) echo "<div style='color: red; margin-top: 1rem; text-align: center;'> $error</div>"; ?>
 
-        
+        </div>
+
+        <?php if(isset($error)): ?>
+
+            <div style="
+                color:red;
+                margin-top:1rem;
+                text-align:center;
+            ">
+                <?= $error ?>
+            </div>
+
+        <?php endif; ?>
+
         <form method="POST">
-        <div class="form-group" > 
 
-        <select name="role" class="form-control" onchange="this.form.submit()" required>
-            <option value="">Select Role</option>
-            <option value="STUDENT" <?= $role === 'STUDENT' ? 'selected' : '' ?>>Student</option>
-            <option value="FACULTY" <?= $role === 'FACULTY' ? 'selected' : '' ?>>Faculty</option>
-        </select>
-        </div>
-            
+            <!-- ROLE -->
+
             <div class="form-group">
+
+                <select
+                    name="role"
+                    class="form-control"
+                    onchange="this.form.submit()"
+                    required
+                >
+
+                    <option value="">
+                        Select Role
+                    </option>
+
+                    <option value="STUDENT"
+                        <?= $role === 'STUDENT'
+                        ? 'selected'
+                        : '' ?>
+                    >
+                        Student
+                    </option>
+
+                    <option value="FACULTY"
+                        <?= $role === 'FACULTY'
+                        ? 'selected'
+                        : '' ?>
+                    >
+                        Faculty
+                    </option>
+
+                </select>
+
+            </div>
+
+            <!-- USERNAME -->
+
+            <div class="form-group">
+
                 <label>Username</label>
-                <input type="text" name="username" class="form-control" placeholder=" Enter Username" required>   
+
+                <input
+                    type="text"
+                    name="username"
+                    class="form-control"
+                    placeholder="Enter Username"
+                    required
+                >
+
             </div>
+
+            <!-- EMAIL -->
+
             <div class="form-group">
+
                 <label>Email</label>
-                <input type="email" name="email" class="form-control" placeholder="Enter Email" required> 
+
+                <input
+                    type="email"
+                    name="email"
+                    class="form-control"
+                    placeholder="Enter Email"
+                    required
+                >
+
             </div>
-            <?php if($role === 'STUDENT'): ?> 
+
+            <!-- STUDENT -->
+
+            <?php if($role === 'STUDENT'): ?>
+
             <div class="form-group">
+
                 <label>Stream</label>
-                    <select name="stream" class="form-control" required> 
-                        <option value="MCA" <?= (($_POST['stream'] ?? '') === 'MCA') ? 'selected' : '' ?>>MCA</option>
-                        <option value="BCA" <?= (($_POST['stream'] ?? '') === 'BCA') ? 'selected' : '' ?>>BCA</option>
-                        <option value="BBA" <?= (($_POST['stream'] ?? '') === 'BBA') ? 'selected' : '' ?>>BBA</option>
-                        <option value="MBA" <?= (($_POST['stream'] ?? '') === 'MBA') ? 'selected' : '' ?>>MBA</option>
-                        </select>
-            </div>              
-            <div class="form-group">
-                <label>Semester</label>
-                <input type="number" name="semester" class="form-control"  placeholder="Enter Semester" min="1" max="8" required>
+
+                <select
+                    name="stream"
+                    class="form-control"
+                    required
+                >
+
+                    <option value="MCA">MCA</option>
+                    <option value="BCA">BCA</option>
+                    <option value="BBA">BBA</option>
+                    <option value="MBA">MBA</option>
+
+                </select>
+
             </div>
+
+            <div class="form-group">
+
+                <label>Semester</label>
+
+                <input
+                    type="number"
+                    name="semester"
+                    class="form-control"
+                    placeholder="Enter Semester"
+                    min="1"
+                    max="8"
+                    required
+                >
+
+            </div>
+
             <?php endif; ?>
 
-            <?php if($role === 'FACULTY') : ?>
-            <div class="form-group" id="faculty-field">
+            <!-- FACULTY -->
+
+            <?php if($role === 'FACULTY'): ?>
+
+            <div class="form-group">
+
                 <label>Department</label>
-                <select name="department" class="form-control" required>
-                    <option value="">Select Department</option>
-                    <option value="MCA" <?= (($_POST['department'] ?? '') === 'MCA') ? 'selected' : '' ?>>MCA</option>
-                    <option value="BCA" <?= (($_POST['department'] ?? '') === 'BCA') ? 'selected' : '' ?>>BCA</option>
-                    <option value="BBA" <?= (($_POST['department'] ?? '') === 'BBA') ? 'selected' : '' ?>>BBA</option>
-                    <option value="MBA" <?= (($_POST['department'] ?? '') === 'MBA') ? 'selected' : '' ?>>MBA</option>
+
+                <select
+                    name="department"
+                    class="form-control"
+                    required
+                >
+
+                    <option value="">
+                        Select Department
+                    </option>
+
+                    <option value="MCA">MCA</option>
+                    <option value="BCA">BCA</option>
+                    <option value="BBA">BBA</option>
+                    <option value="MBA">MBA</option>
+
                 </select>
-            </div>  
-            <?php endif; ?> 
+
+            </div>
+
+            <?php endif; ?>
+
+            <!-- PASSWORD -->
+
             <div class="form-group">
+
                 <label>Password</label>
-                <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+
+                <input
+                    type="password"
+                    name="password"
+                    class="form-control"
+                    placeholder="••••••••"
+                    required
+                >
+
             </div>
+
+            <!-- CONFIRM PASSWORD -->
+
             <div class="form-group">
+
                 <label>Confirm Password</label>
-                <input type="password" name="confirm_password" class="form-control" placeholder="••••••••" required>
+
+                <input
+                    type="password"
+                    name="confirm_password"
+                    class="form-control"
+                    placeholder="••••••••"
+                    required
+                >
+
             </div>
-            <button type="submit" name="register" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 10px;">
-                Register <i class="fa-solid fa-arrow-right" style="margin-left: 10px;"></i>
+
+            <!-- BUTTON -->
+
+            <button
+                type="submit"
+                name="register"
+                class="btn btn-primary"
+                style="
+                    width:100%;
+                    margin-top:10px;
+                "
+            >
+
+                Register
+
+                <i class="fa-solid fa-arrow-right"
+                   style="margin-left:10px;">
+                </i>
+
             </button>
-            <div style="text-align: center; margin-top: 20px;">
-        <p>Already have an account? <a href="common_login.php">Log in</a></p>
-</div>
+
+            <div style="
+                text-align:center;
+                margin-top:20px;
+            ">
+
+                <p>
+                    Already have an account?
+                    <a href="common_login.php">
+                        Log in
+                    </a>
+                </p>
+
+            </div>
+
         </form>
+
     </div>
-</div> 
 
- 
-
- 
-
-
- 
+</div>
