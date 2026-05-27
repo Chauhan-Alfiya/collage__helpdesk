@@ -33,12 +33,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['email']    = $user['email']; 
             $_SESSION['initial']  = strtoupper(substr($user['username'], 0, 1));
 
-            if (in_array($_SESSION['role'], ['STAFF','CORD'])) {
-                $_SESSION['stream'] = $user['department']; 
+            if (
+                $_SESSION['role'] == 'STAFF' ||
+                $_SESSION['role'] == 'CORD'
+            ) {
+                $_SESSION['stream'] =
+                    $user['department'];
             }
+            if ($_SESSION['role'] == 'ADMIN') {
 
-            // Redirect all to home.php
-            header("Location: home.php"); 
+                header("Location: admin_dashboard.php");
+            }
+            elseif ($_SESSION['role'] == 'CORD') {
+                header("Location: cord_dashboard.php");
+            }
+            elseif ($_SESSION['role'] == 'STAFF') {
+                header("Location: staff_dashboard.php");
+            }
+            else {
+                header("Location: home.php");
+            }
             exit;
         } else {
             $error = "Invalid username or password.";

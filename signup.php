@@ -18,8 +18,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
     $confirm    = $_POST['confirm_password'] ?? '';
     $role       = $_POST['role'] ?? '';
 
-    // VALIDATION
-
     if (
         empty($username) ||
         empty($email) ||
@@ -91,7 +89,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
                     ? $stream
                     : ($department ?? 'N/A');
 
-                // INSERT USER
 
                 $stmt = $pdo->prepare("
                     INSERT INTO users
