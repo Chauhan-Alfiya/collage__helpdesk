@@ -4,7 +4,6 @@ include 'includes/functions.php';
 session_start(); 
 
 $msg = ""; 
-
 if (!isset($_SESSION['username'])) {
     header("Location: common_login.php");
     exit();
